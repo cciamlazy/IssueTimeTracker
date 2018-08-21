@@ -263,3 +263,5 @@ __pycache__/
 # Additional files
 *.zip
 IssueTimeTracker/Classes/Data/Data.cs
+*.ico
+!closed.ico
