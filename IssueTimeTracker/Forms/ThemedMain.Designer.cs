@@ -98,12 +98,11 @@
             this.Global_Timer = new System.Windows.Forms.Timer(this.components);
             this.LACounty = new System.Windows.Forms.Timer(this.components);
             this.JiraChecker = new System.Windows.Forms.Timer(this.components);
-            this.BackgroundPicture = new System.Windows.Forms.PictureBox();
+            this.Animator = new System.Windows.Forms.Timer(this.components);
             this.TitleBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.IconI)).BeginInit();
             this.MainPanel.SuspendLayout();
             this.TopMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.BackgroundPicture)).BeginInit();
             this.SuspendLayout();
             // 
             // TitleBar
@@ -212,7 +211,6 @@
             this.MainPanel.Controls.Add(this.Global_HourColon);
             this.MainPanel.Controls.Add(this.Global_Hour);
             this.MainPanel.Controls.Add(this.TopMenu);
-            this.MainPanel.Controls.Add(this.BackgroundPicture);
             this.MainPanel.Location = new System.Drawing.Point(0, 30);
             this.MainPanel.Name = "MainPanel";
             this.MainPanel.Size = new System.Drawing.Size(300, 300);
@@ -919,14 +917,10 @@
             this.JiraChecker.Interval = 30000;
             this.JiraChecker.Tick += new System.EventHandler(this.JiraChecker_Tick);
             // 
-            // BackgroundPicture
+            // Animator
             // 
-            this.BackgroundPicture.BackColor = System.Drawing.Color.Transparent;
-            this.BackgroundPicture.Location = new System.Drawing.Point(0, 0);
-            this.BackgroundPicture.Name = "BackgroundPicture";
-            this.BackgroundPicture.Size = new System.Drawing.Size(300, 300);
-            this.BackgroundPicture.TabIndex = 168;
-            this.BackgroundPicture.TabStop = false;
+            this.Animator.Interval = 66;
+            this.Animator.Tick += new System.EventHandler(this.Animator_Tick);
             // 
             // ThemedMain
             // 
@@ -956,7 +950,6 @@
             this.MainPanel.PerformLayout();
             this.TopMenu.ResumeLayout(false);
             this.TopMenu.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.BackgroundPicture)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1031,6 +1024,6 @@
         public System.Windows.Forms.Timer JiraChecker;
         private System.Windows.Forms.ToolStripMenuItem colorPickerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem commandToolStripMenuItem;
-        private System.Windows.Forms.PictureBox BackgroundPicture;
+        private System.Windows.Forms.Timer Animator;
     }
 }

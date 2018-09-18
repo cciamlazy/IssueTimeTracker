@@ -37,6 +37,8 @@ namespace IssueTimeTracker
             SetGlobalTimer();
             SetTaskTimer();
 
+            NotificationHandler.Initialize();
+
             this.Location = Setting.Value.Timer_StartLocation;
             if (!IsOnScreen(this))
                 this.Location = new Point(Screen.PrimaryScreen.WorkingArea.X + 400, Screen.PrimaryScreen.WorkingArea.Y + 100);
@@ -441,7 +443,7 @@ namespace IssueTimeTracker
 
         bool lostInternet = false;
 
-        private void JiraChecker_Tick(object sender, EventArgs e)
+        public void JiraChecker_Tick(object sender, EventArgs e)
         {
             if (_Jira == null || StaticHandler.JiraFailCount > 5)
             {
@@ -807,11 +809,22 @@ namespace IssueTimeTracker
                 var animationMethod = FormAnimator.AnimationMethod.Slide;
 
                 var animationDirection = Directions[Setting.Value.Notification_Direction];
-                ToastNotification("LA County Issues", "New Jira Issue" + jira, duration, animationMethod, animationDirection, laissue);
-
+                //ToastNotification("LA County Issues", "New Jira Issue" + jira, duration, animationMethod, animationDirection, laissue);
+                WebClient webClient = new WebClient();
+                try
+                {
+                    webClient.DownloadString(MainData.Instance.Domain + string.Format("IssueTimeTracker/PostText.php?email={0}&subject={1}&msg={2}",
+                        (Setting.Value.Notification_PhoneNumber + NotificationHandler.Carriers[Setting.Value.Notification_Carrier]), "LA County Issues", "New Jira Issue" + (laissue != "" ? "\r\n" + Setting.Value.Jira_Link + @"projects/LAC/queues/custom/7/" + laissue + "\r\n\r\n" + jira : "")));
+                }
+                catch (Exception ea)
+                {
+                    MessageBox.Show(ea.Message);
+                }
+                webClient.Dispose();
             }
-            catch
+            catch (Exception e)
             {
+                MessageBox.Show(e.Message);
             }
         }
 
@@ -938,6 +951,8 @@ namespace IssueTimeTracker
             Setting.Save();
 
             CleanData.CleanJira();
+
+            NotificationHandler.Dispose();
 
             if (trayIcon != null)
                 trayIcon.Visible = false;
@@ -1088,14 +1103,27 @@ namespace IssueTimeTracker
             new JiraData().Show();
         }
 
+        List<Panel> animatedStars = new List<Panel>();
+
         private void applyThemeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WebClient wc = new WebClient();
-            byte[] bytes = wc.DownloadData("http://csmithut.net/RandomFiles/img.gif");
-            MemoryStream ms = new MemoryStream(bytes);
-            System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
-
-            BackgroundPicture.Image = img;
+            Random r = new Random();
+            for (int i = 0; i < 50; i++)
+            {
+                int size = r.Next(1, 5);
+                
+                Panel star = new Panel()
+                {
+                    BackColor = Color.White,
+                    Location = new Point(r.Next(this.Width), r.Next(this.Height)),
+                    Size = new Size(size, size),
+                    Visible = true,
+                    Tag = "PreventTheme"
+                };
+                this.Controls.Add(star);
+                animatedStars.Add(star);
+            }
+            Animator.Enabled = true;
         }
 
         private void testToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1341,6 +1369,18 @@ namespace IssueTimeTracker
         {
             if (Setting.Value.General_JiraAccess && Setting.Value.Jira_AutoCheck)
                 jiraLogin.AutoLogin(sender, e);
+        }
+
+        private void Animator_Tick(object sender, EventArgs e)
+        {
+            Random r = new Random();
+            foreach (Panel p in animatedStars)
+            {
+                if (p.Location.X > this.Size.Width)
+                    p.Location = new Point(-p.Width, r.Next(5, this.Height - 5));
+                p.Location = new Point(p.Location.X + (p.Size.Width / 2), p.Location.Y);
+                p.BringToFront();
+            }
         }
     }
 }

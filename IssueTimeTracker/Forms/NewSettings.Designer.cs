@@ -99,6 +99,12 @@
             this.Title = new System.Windows.Forms.Label();
             this.IconI = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.Notification_TextNotification = new System.Windows.Forms.CheckBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.Notification_Carrier = new System.Windows.Forms.ComboBox();
+            this.Notification_PhoneNumber = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.button12 = new System.Windows.Forms.Button();
             this.settingPages.SuspendLayout();
             this.General.SuspendLayout();
             this.Timer.SuspendLayout();
@@ -611,6 +617,12 @@
             // 
             // Notifications
             // 
+            this.Notifications.Controls.Add(this.button12);
+            this.Notifications.Controls.Add(this.label6);
+            this.Notifications.Controls.Add(this.Notification_Carrier);
+            this.Notifications.Controls.Add(this.Notification_PhoneNumber);
+            this.Notifications.Controls.Add(this.label17);
+            this.Notifications.Controls.Add(this.Notification_TextNotification);
             this.Notifications.Controls.Add(this.Jira_WindowsNotification);
             this.Notifications.Controls.Add(this.label25);
             this.Notifications.Controls.Add(this.Notification_Scale);
@@ -700,7 +712,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.label19.Location = new System.Drawing.Point(4, 177);
+            this.label19.Location = new System.Drawing.Point(3, 177);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(42, 19);
             this.label19.TabIndex = 157;
@@ -1043,6 +1055,78 @@
             this.panel1.Size = new System.Drawing.Size(127, 75);
             this.panel1.TabIndex = 133;
             // 
+            // Notification_TextNotification
+            // 
+            this.Notification_TextNotification.AutoSize = true;
+            this.Notification_TextNotification.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Notification_TextNotification.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.Notification_TextNotification.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.Notification_TextNotification.Location = new System.Drawing.Point(7, 201);
+            this.Notification_TextNotification.Name = "Notification_TextNotification";
+            this.Notification_TextNotification.Size = new System.Drawing.Size(259, 24);
+            this.Notification_TextNotification.TabIndex = 164;
+            this.Notification_TextNotification.Text = "Send Text While Computer is Locked:";
+            this.Notification_TextNotification.UseVisualStyleBackColor = true;
+            this.Notification_TextNotification.CheckedChanged += new System.EventHandler(this.Notification_TextNotification_CheckedChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(4, 259);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(51, 17);
+            this.label6.TabIndex = 168;
+            this.label6.Text = "Carrier:";
+            // 
+            // Notification_Carrier
+            // 
+            this.Notification_Carrier.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Notification_Carrier.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.Notification_Carrier.FormattingEnabled = true;
+            this.Notification_Carrier.Location = new System.Drawing.Point(109, 256);
+            this.Notification_Carrier.Name = "Notification_Carrier";
+            this.Notification_Carrier.Size = new System.Drawing.Size(157, 25);
+            this.Notification_Carrier.TabIndex = 167;
+            this.Notification_Carrier.SelectedIndexChanged += new System.EventHandler(this.Notification_Carrier_SelectedIndexChanged);
+            // 
+            // Notification_PhoneNumber
+            // 
+            this.Notification_PhoneNumber.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.Notification_PhoneNumber.Font = new System.Drawing.Font("Segoe UI", 10.5F);
+            this.Notification_PhoneNumber.Location = new System.Drawing.Point(109, 230);
+            this.Notification_PhoneNumber.MaxLength = 10;
+            this.Notification_PhoneNumber.Name = "Notification_PhoneNumber";
+            this.Notification_PhoneNumber.Size = new System.Drawing.Size(101, 19);
+            this.Notification_PhoneNumber.TabIndex = 166;
+            this.Notification_PhoneNumber.Text = "8888888888";
+            this.Notification_PhoneNumber.TextChanged += new System.EventHandler(this.Notification_PhoneNumber_TextChanged);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.Location = new System.Drawing.Point(4, 231);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(99, 17);
+            this.label17.TabIndex = 165;
+            this.label17.Text = "Phone Number:";
+            // 
+            // button12
+            // 
+            this.button12.FlatAppearance.BorderSize = 0;
+            this.button12.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Silver;
+            this.button12.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button12.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button12.Location = new System.Drawing.Point(216, 230);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(50, 19);
+            this.button12.TabIndex = 169;
+            this.button12.Text = "Test";
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
+            // 
             // NewSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1158,5 +1242,11 @@
         private System.Windows.Forms.Label Title;
         private System.Windows.Forms.PictureBox IconI;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ComboBox Notification_Carrier;
+        private System.Windows.Forms.TextBox Notification_PhoneNumber;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.CheckBox Notification_TextNotification;
+        private System.Windows.Forms.Button button12;
     }
 }

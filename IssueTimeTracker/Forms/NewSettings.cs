@@ -18,6 +18,8 @@ using IssueTimeTracker.Forms.Basic_Forms;
 using Renci.SshNet;
 using IssueTimeTracker.Classes.Data;
 using IssueTimeTracker.Forms.Basic_Forms.Themes;
+using IssueTimeTracker.Classes.Helper;
+using System.Net.Mail;
 
 namespace IssueTimeTracker.Forms
 {
@@ -121,6 +123,13 @@ namespace IssueTimeTracker.Forms
             Notification_DirectionComboBox.SelectedIndex = Setting.Value.Notification_Direction;
             Notification_Frequency.Value = Setting.Value.Notification_Frequency;
             Notification_Scale.Value = Setting.Value.Notification_Scale;
+            Notification_TextNotification.Checked = Setting.Value.Notification_TextNotification;
+            Notification_PhoneNumber.Text = Setting.Value.Notification_PhoneNumber;
+
+            foreach (var v in NotificationHandler.Carriers)
+                Notification_Carrier.Items.Add(v.Key);
+
+            Notification_Carrier.SelectedItem = Setting.Value.Notification_Carrier;
 
             var soundsFolder = new DirectoryInfo(Path.Combine(Program.DataPath, "Sounds"));
             foreach (var file in soundsFolder.GetFiles())
@@ -792,6 +801,12 @@ namespace IssueTimeTracker.Forms
             Setting.Value.Notification_WindowsNotification = (Jira_WindowsNotification.SelectedIndex == 1);
             if (Setting.Value.Notification_WindowsNotification)
                 Setting.Value.Jira_ShowTrayIcon = true;
+            else
+                NotificationHandler.HideTrayIcon(new object(), new EventArgs());
+            Setting.Value.Notification_TextNotification = Notification_TextNotification.Checked;
+            Setting.Value.Notification_PhoneNumber = Notification_PhoneNumber.Text;
+            if (Notification_Carrier.SelectedItem != null)
+                Setting.Value.Notification_Carrier = Notification_Carrier.SelectedItem.ToString();
 
             //Save Log Settings
             Setting.Value.Log_WriteXlsx = Log_ExportXlsx.Checked;
@@ -1123,6 +1138,54 @@ namespace IssueTimeTracker.Forms
         private void Minimize_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void Notification_PhoneNumber_TextChanged(object sender, EventArgs e)
+        {
+            if (FormLoaded)
+            {
+                SettingsHaveChanged = true;
+            }
+        }
+
+        private void Notification_Carrier_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (FormLoaded)
+            {
+                SettingsHaveChanged = true;
+            }
+        }
+
+        private void Notification_TextNotification_CheckedChanged(object sender, EventArgs e)
+        {
+            if (FormLoaded)
+            {
+                SettingsHaveChanged = true;
+            }
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            if(Notification_PhoneNumber.Text.Length != 10)
+            {
+                MessageBox.Show("Invalid Phone Number");
+            }
+            else if (Notification_Carrier.SelectedItem == null || Notification_Carrier.SelectedItem.ToString() == "")
+            {
+                MessageBox.Show("Invalid Carrier");
+            }
+
+            WebClient webClient = new WebClient();
+            try
+            {
+                webClient.DownloadString(MainData.Instance.Domain + string.Format("IssueTimeTracker/PostText.php?email={0}&subject={1}&msg={2}",
+                    (Notification_PhoneNumber.Text + NotificationHandler.Carriers[Notification_Carrier.SelectedItem.ToString()]), "Notification", "This is a test Notification"));
+            }
+            catch (Exception ea)
+            {
+                MessageBox.Show("Failed to process: " + ea.Message);
+            }
+            webClient.Dispose();
         }
     }
 }

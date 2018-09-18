@@ -88,28 +88,40 @@ namespace IssueTimeTracker.Classes
             foreach (Control c in all)
             {
                 //if(c.BackColor != Color.Transparent)
-                if (c.Tag != null && c.Tag.ToString() == "Foreground")
-                    c.BackColor = Foreground;
-                else
-                    c.BackColor = Background;
-                if (c.Tag != null && c.Tag.ToString() == "OtherForeground")
-                    c.ForeColor = OtherForeground;
-                else
-                    c.ForeColor = Foreground;
+                bool applyTheme = true;
+                if (c.Tag != null && c.Tag.ToString() == "PreventTheme")
+                    applyTheme = false;
+
+                if (applyTheme)
+                {
+                    if (c.Tag != null && c.Tag.ToString() == "Foreground")
+                        c.BackColor = Foreground;
+                    else
+                        c.BackColor = Background;
+                    if (c.Tag != null && c.Tag.ToString() == "OtherForeground")
+                        c.ForeColor = OtherForeground;
+                    else
+                        c.ForeColor = Foreground;
                 
+                    if (c.GetType() == typeof(CheckBox))
+                    {
+                        CheckBox b = (CheckBox)c;
+                        b.ForeColor = Foreground;
+                    }
 
-                if (c.GetType() == typeof(Button) && (c.Tag == null || c.Tag.ToString() != "NoTheme"))
-                {
-                    Button b = (Button)c;
-                    b.FlatAppearance.MouseDownBackColor = MouseDown;
-                    b.FlatAppearance.MouseOverBackColor = MouseOver;
-                }
+                    if (c.GetType() == typeof(Button) && (c.Tag == null || c.Tag.ToString() != "NoTheme"))
+                    {
+                        Button b = (Button)c;
+                        b.FlatAppearance.MouseDownBackColor = MouseDown;
+                        b.FlatAppearance.MouseOverBackColor = MouseOver;
+                    }
 
-                if (c.GetType() == typeof(CircularProgressBar.CircularProgressBar))
-                {
-                    CircularProgressBar.CircularProgressBar bar = (CircularProgressBar.CircularProgressBar)c;
-                    bar.OuterColor = OtherForeground;
-                    bar.ProgressColor = Selected;
+                    if (c.GetType() == typeof(CircularProgressBar.CircularProgressBar))
+                    {
+                        CircularProgressBar.CircularProgressBar bar = (CircularProgressBar.CircularProgressBar)c;
+                        bar.OuterColor = OtherForeground;
+                        bar.ProgressColor = Selected;
+                    }
                 }
             }
 

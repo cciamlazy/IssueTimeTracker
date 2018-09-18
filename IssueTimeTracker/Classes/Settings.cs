@@ -49,6 +49,9 @@ namespace IssueTimeTracker.Classes
         [XmlElement(Type = typeof(XmlColor))]
         public Color Notification_TextColor { get; set; } = Color.White;
         public bool Notification_WindowsNotification { get; set; } = false;
+        public bool Notification_TextNotification { get; set; } = false;
+        public string Notification_PhoneNumber { get; set; } = "";
+        public string Notification_Carrier { get; set; } = "";
 
         //Timer Settings
         [XmlElement(Type = typeof(XmlColor))]
