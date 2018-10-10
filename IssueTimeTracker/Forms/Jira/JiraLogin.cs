@@ -144,22 +144,21 @@ namespace IssueTimeTracker.Forms
                 StaticHandler._Main._Jira.Issues.MaxIssuesPerRequest = 5;
                 StaticHandler._Main.jiraBrowserToolStripMenuItem.Enabled = true;
                 StaticHandler._Main.jiraDataToolStripMenuItem.Enabled = true;
-                StaticHandler._Main.JiraChecker.Enabled = true;
+                StaticHandler._Main.JiraTicketChecker.Enabled = true;
                 StaticHandler._Main.jiraCheckingState = JiraCheckingState.Checking;
             }
             if (StaticHandler._ThemedMain != null)
             {
-                StaticHandler._ThemedMain.JiraPassword = Encryption.Helper.ConvertToSecureString(Password.Text);
-                StaticHandler._ThemedMain._Jira = Atlassian.Jira.Jira.CreateRestClient(Setting.Value.Jira_Link, Username.Text, Password.Text, new JiraRestClientSettings() { EnableRequestTrace = true });
-                StaticHandler._ThemedMain._Jira.Issues.MaxIssuesPerRequest = 5;
-                StaticHandler._ThemedMain.jiraBrowserToolStripMenuItem.Enabled = true;
-                StaticHandler._ThemedMain.jiraDataToolStripMenuItem.Enabled = true;
-                StaticHandler._ThemedMain.JiraChecker.Enabled = true;
-                StaticHandler._ThemedMain.jiraCheckingState = JiraCheckingState.Checking;
+                JiraChecker.JiraPassword = Encryption.Helper.ConvertToSecureString(Password.Text);
+                JiraChecker._Jira = Atlassian.Jira.Jira.CreateRestClient(Setting.Value.Jira_Link, Username.Text, Password.Text, new JiraRestClientSettings() { EnableRequestTrace = true });
+                JiraChecker._Jira.Issues.MaxIssuesPerRequest = 5;
+                JiraChecker.LoggedIn = true;
+                StaticHandler._ThemedMain.JiraTicketChecker.Enabled = true;
+                Classes.Helper.NotificationHandler.jiraCheckingState = JiraCheckingState.Checking;
             }
             Setting.Value.Jira_Username = Username.Text;
             Setting.Save();
-            StaticHandler.JiraFailCount = 0;
+            JiraChecker.JiraFailCount = 0;
             this.Hide();
         }
 
@@ -168,7 +167,7 @@ namespace IssueTimeTracker.Forms
             Atlassian.Jira.Jira tempJira = Atlassian.Jira.Jira.CreateRestClient(Setting.Value.Jira_Link, Username.Text, Password.Text, new JiraRestClientSettings() { EnableRequestTrace = true });
 
             bool pass = false;
-            tempJira.MaxIssuesPerRequest = 5; //Set the Max Issues per Request to 25
+            tempJira.Issues.MaxIssuesPerRequest = 5; //Set the Max Issues per Request to 25
             IPagedQueryResult<Issue> issues = null; //Creates a variable to store the issues in outside the try-catch statement
             try
             {

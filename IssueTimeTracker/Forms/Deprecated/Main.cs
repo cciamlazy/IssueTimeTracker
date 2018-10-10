@@ -141,7 +141,7 @@ namespace IssueTimeTracker
 
             APSCheckbox.Visible = Setting.Value.General_APSUtlizer;
 
-            if (Setting.Value.General_JiraAccess && Setting.Value.Jira_AutoCheck && !JiraChecker.Enabled && StaticHandler.JiraFailCount < 5)
+            if (Setting.Value.General_JiraAccess && Setting.Value.Jira_AutoCheck && !JiraTicketChecker.Enabled && JiraChecker.JiraFailCount < 5)
             {
                 if (Program.CheckForInternetConnection())
                 {
@@ -152,15 +152,15 @@ namespace IssueTimeTracker
                     //JiraChecker.Enabled = true;
                 }
             }
-            else if (!Setting.Value.Jira_AutoCheck && JiraChecker.Enabled)
+            else if (!Setting.Value.Jira_AutoCheck && JiraTicketChecker.Enabled)
             {
                 _Jira = null;
-                JiraChecker.Enabled = false;
+                JiraTicketChecker.Enabled = false;
             }
             //UpdateSystemTrayIcon(JiraChecker.Enabled);
             if (!Program.CheckForInternetConnection())
                 jiraCheckingState = JiraCheckingState.LostInternet;
-            else if (JiraChecker.Enabled)
+            else if (JiraTicketChecker.Enabled)
                 jiraCheckingState = JiraCheckingState.Checking;
             else
                 jiraCheckingState = JiraCheckingState.Disabled;
@@ -431,7 +431,7 @@ namespace IssueTimeTracker
 
         private void JiraChecker_Tick(object sender, EventArgs e)
         {
-            if (_Jira == null || StaticHandler.JiraFailCount > 5)
+            if (_Jira == null || JiraChecker.JiraFailCount > 5)
             {
                 jiraCheckingState = JiraCheckingState.Unknown;
                 return;
@@ -456,9 +456,9 @@ namespace IssueTimeTracker
                 jiraBrowserToolStripMenuItem.Enabled = true;
                 jiraCheckingState = JiraCheckingState.Checking;
             }
-            if (StaticHandler.JiraFailCount == 5)
+            if (JiraChecker.JiraFailCount == 5)
             {
-                StaticHandler.JiraFailCount++;
+                JiraChecker.JiraFailCount++;
                 ToastNotification("Jira Failed", "Jira failed at getting LAC issues too many times. Log in again from settings", 5, FormAnimator.AnimationMethod.Slide, Directions[Setting.Value.Notification_Direction]);
                 jiraBrowserToolStripMenuItem.Enabled = false;
                 jiraCheckingState = JiraCheckingState.FailedLogin;
@@ -474,7 +474,7 @@ namespace IssueTimeTracker
 
         async void JiraCheck(bool loop = false)
         {
-            if (relogin && StaticHandler.JiraFailCount > 3 && Setting.Value.Jira_Username != "" && Setting.Value.Jira_Username != "!" && JiraPassword != null)
+            if (relogin && JiraChecker.JiraFailCount > 3 && Setting.Value.Jira_Username != "" && Setting.Value.Jira_Username != "!" && JiraPassword != null)
             {
                 _Jira = Jira.CreateRestClient(Setting.Value.Jira_Link, Setting.Value.Jira_Username, Encryption.Helper.ConvertToUnsecureString(JiraPassword), new JiraRestClientSettings() { EnableRequestTrace = true });
                 relogin = false;
@@ -497,7 +497,7 @@ namespace IssueTimeTracker
             {
                 jiraBrowserToolStripMenuItem.Enabled = false;
                 jiraCheckingState = JiraCheckingState.FailedLogin;
-                if (StaticHandler.JiraFailCount > 0 && Setting.Value.Jira_Username != "" && Setting.Value.Jira_Username != "!" && JiraPassword != null)
+                if (JiraChecker.JiraFailCount > 0 && Setting.Value.Jira_Username != "" && Setting.Value.Jira_Username != "!" && JiraPassword != null)
                 {
                     _Jira = Jira.CreateRestClient(Setting.Value.Jira_Link, Setting.Value.Jira_Username, Encryption.Helper.ConvertToUnsecureString(JiraPassword), new JiraRestClientSettings() { EnableRequestTrace = true });
                 }
@@ -505,7 +505,7 @@ namespace IssueTimeTracker
                     JiraCheck(true);
                 else
                 {
-                    StaticHandler.JiraFailCount++;
+                    JiraChecker.JiraFailCount++;
                     jiraCheckingState = JiraCheckingState.FailedLogin;
                    
                 }
@@ -530,7 +530,7 @@ namespace IssueTimeTracker
 
             var animationDirection = Directions[Setting.Value.Notification_Direction];
             string jira = "";
-            if (_jira == "" && StaticHandler.JiraFailCount < 5 && Setting.Value.Jira_AutoCheck && _Jira != null)
+            if (_jira == "" && JiraChecker.JiraFailCount < 5 && Setting.Value.Jira_AutoCheck && _Jira != null)
             {
 
                 try
@@ -544,7 +544,7 @@ namespace IssueTimeTracker
                             laissue = issue.Key.Value;
                         }
                     }
-                } catch { StaticHandler.JiraFailCount++; }
+                } catch { JiraChecker.JiraFailCount++; }
             }
             else
                 jira = _jira;
@@ -1162,12 +1162,6 @@ namespace IssueTimeTracker
 
         public void UpdateSystemTrayIcon(bool isCheckingJira)
         {
-            if(!Setting.Value.Jira_ShowTrayIcon && !Setting.Value.Notification_WindowsNotification)
-            {
-                if (trayIcon != null)
-                    trayIcon.Visible = false;
-                return;
-            }
             if(trayIcon == null)
             {
                 trayIcon = new NotifyIcon();
@@ -1182,8 +1176,6 @@ namespace IssueTimeTracker
                         new MenuItem("Stop Checking Jira", StopCheckingJira),
                         new MenuItem("Check Jira Now", JiraChecker_Tick)
                     });
-                if (!Setting.Value.Notification_WindowsNotification)
-                    trayIcon.ContextMenu.MenuItems.Add(new MenuItem("Hide Tray Icon", HideTrayIcon));
                 trayIcon.Visible = true;
                 trayIcon.Text = "Jira is currently being monitored for new tickets";
             }
@@ -1202,8 +1194,6 @@ namespace IssueTimeTracker
                 {
                     trayIcon.ContextMenu = new ContextMenu();
                 }
-                if (!Setting.Value.Notification_WindowsNotification)
-                    trayIcon.ContextMenu.MenuItems.Add(new MenuItem("Hide Tray Icon", HideTrayIcon));
                 trayIcon.Visible = true;
                 trayIcon.Text = "Jira is not currently being monitored\r\nReason: " + Regex.Replace(Enum.GetName(typeof(JiraCheckingState), jiraCheckingState), "(\\B[A-Z])", " $1");
             }
@@ -1214,25 +1204,17 @@ namespace IssueTimeTracker
             if (JiraLastChecked == null)
                 JiraLastChecked = DateTime.Now;
 
-            if (JiraLastChecked.Second + 60 < DateTime.Now.Second && JiraChecker.Enabled)
+            if (JiraLastChecked.Second + 60 < DateTime.Now.Second && JiraTicketChecker.Enabled)
                 jiraCheckingState = JiraCheckingState.Unknown;
-            else if (JiraChecker.Enabled)
+            else if (JiraTicketChecker.Enabled)
                 jiraCheckingState = JiraCheckingState.Checking;
-            else if (!JiraChecker.Enabled)
+            else if (!JiraTicketChecker.Enabled)
                 jiraCheckingState = JiraCheckingState.Disabled;
-        }
-
-        public void HideTrayIcon(object Sender, EventArgs e)
-        {
-            Setting.Value.Jira_ShowTrayIcon = false;
-            Setting.Save();
-            if (trayIcon != null)
-                trayIcon.Visible = false;
         }
 
         public void StopCheckingJira(object Sender, EventArgs e)
         {
-            JiraChecker.Enabled = false;
+            JiraTicketChecker.Enabled = false;
             jiraCheckingState = JiraCheckingState.Disabled;
         }
 
@@ -1244,7 +1226,7 @@ namespace IssueTimeTracker
             {
                 if (Program.CheckForInternetConnection())
                 {
-                    JiraChecker.Enabled = true;
+                    JiraTicketChecker.Enabled = true;
                     jiraCheckingState = JiraCheckingState.Checking;
                 }
                 else
@@ -1255,7 +1237,7 @@ namespace IssueTimeTracker
             }
             else
             {
-                JiraChecker.Enabled = true;
+                JiraTicketChecker.Enabled = true;
                 jiraCheckingState = JiraCheckingState.Checking;
             }
         }

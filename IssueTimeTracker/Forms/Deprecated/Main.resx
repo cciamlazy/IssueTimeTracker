@@ -117,49 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="IconI.ErrorImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wwAADsMBx2+oZAAAAQNJREFUOE+1ktsqhUEUgP878gJkP4gLx5dQu7yFIiXlmH0jLyLxJoQHcSjc4Ptm
-        r7VNv3+j5KuvmVmzZs2haf6DHg7wFl/wFe8iNovfsoZP+D7GR+xjJy5+QxPPcAEncQLnI+bcNspKtAWP
-        nTuvGwhy52Qu2j00vltG4P0MuEtNXeAUT/AAMz4q4IMZ8Ng1mehxs5+OFouvbdA712SybGLnYvlNAdnB
-        XLwVbeEGTVwso5/Zx6thd8gxWuC8jD5pn0DyEQ/LKPCH+Umc2DAQtAv4Bxzf47SBGn9YfqQLXMKpcBkv
-        0TlzVrETizxg7tzWnccuTmbwCK/xOfTBvPOXY/+RpvkAPDFcF5dZRTMAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="IconI.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wwAADsMBx2+oZAAAAQNJREFUOE+1ktsqhUEUgP878gJkP4gLx5dQu7yFIiXlmH0jLyLxJoQHcSjc4Ptm
-        r7VNv3+j5KuvmVmzZs2haf6DHg7wFl/wFe8iNovfsoZP+D7GR+xjJy5+QxPPcAEncQLnI+bcNspKtAWP
-        nTuvGwhy52Qu2j00vltG4P0MuEtNXeAUT/AAMz4q4IMZ8Ng1mehxs5+OFouvbdA712SybGLnYvlNAdnB
-        XLwVbeEGTVwso5/Zx6thd8gxWuC8jD5pn0DyEQ/LKPCH+Umc2DAQtAv4Bxzf47SBGn9YfqQLXMKpcBkv
-        0TlzVrETizxg7tzWnccuTmbwCK/xOfTBvPOXY/+RpvkAPDFcF5dZRTMAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="IconI.InitialImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wwAADsMBx2+oZAAAAQNJREFUOE+1ktsqhUEUgP878gJkP4gLx5dQu7yFIiXlmH0jLyLxJoQHcSjc4Ptm
-        r7VNv3+j5KuvmVmzZs2haf6DHg7wFl/wFe8iNovfsoZP+D7GR+xjJy5+QxPPcAEncQLnI+bcNspKtAWP
-        nTuvGwhy52Qu2j00vltG4P0MuEtNXeAUT/AAMz4q4IMZ8Ng1mehxs5+OFouvbdA712SybGLnYvlNAdnB
-        XLwVbeEGTVwso5/Zx6thd8gxWuC8jD5pn0DyEQ/LKPCH+Umc2DAQtAv4Bxzf47SBGn9YfqQLXMKpcBkv
-        0TlzVrETizxg7tzWnccuTmbwCK/xOfTBvPOXY/+RpvkAPDFcF5dZRTMAAAAASUVORK5CYII=
-</value>
-  </data>
+  <metadata name="Global_Timer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>121, 17</value>
+  </metadata>
+  <metadata name="LACounty.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>244, 17</value>
+  </metadata>
+  <metadata name="JiraTicketChecker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>348, 17</value>
+  </metadata>
+  <metadata name="MessageWatcher.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>461, 17</value>
+  </metadata>
   <metadata name="TopMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <metadata name="Global_Timer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>128, 24</value>
-  </metadata>
-  <metadata name="LACounty.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>251, 24</value>
-  </metadata>
-  <metadata name="JiraTicketChecker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>355, 24</value>
-  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAYAEBAAAAEAIABoBAAAZgAAAAAAAAABACAAvREAAM4EAAAwMAAAAQAgAKglAACLFgAAICAAAAEA

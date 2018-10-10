@@ -157,15 +157,16 @@ namespace IssueTimeTracker.Forms
                 case Classes.JiraMode.WebBrowser:
                     Jira_Mode.SelectedIndex = 2;
                     break;
-
             }
+            BindingList<SLA> SLAlist = new BindingList<SLA>(Setting.Value.Jira_SLAs);
+            jiraSLAGrid.DataSource = SLAlist;
 
             if (Setting.Value.Notification_WindowsNotification)
                 Jira_WindowsNotification.SelectedIndex = 1;
             else
                 Jira_WindowsNotification.SelectedIndex = 0;
 
-            Setting.Value.CurrentTheme.ApplyTheme(this, new Type[] { typeof(Label), typeof(Button), typeof(TextBox), typeof(ComboBox), typeof(CheckBox), typeof(TabPage), typeof(NumericUpDown), typeof(Panel) });
+            Setting.Value.CurrentTheme.ApplyTheme(this, new Type[] { typeof(Label), typeof(Button), typeof(TextBox), typeof(ComboBox), typeof(CheckBox), typeof(TabPage), typeof(NumericUpDown), typeof(Panel), typeof(GroupBox), typeof(DataGridView) });
 
             FormLoaded = true;
         }
@@ -693,17 +694,13 @@ namespace IssueTimeTracker.Forms
                 }
                 else if (StaticHandler._ThemedMain != null)
                 {
-                    if (StaticHandler._ThemedMain.trayIcon == null)
+                    if (NotificationHandler.trayIcon == null)
                     {
-                        StaticHandler._ThemedMain.trayIcon = new NotifyIcon()
-                        {
-                            Icon = Resources.closed,
-                            Visible = true
-                        };
+                        NotificationHandler.Initialize();
                     }
-                    StaticHandler._ThemedMain.trayIcon.BalloonTipTitle = "Test Notification";
-                    StaticHandler._ThemedMain.trayIcon.BalloonTipText = "This is just a test";
-                    StaticHandler._ThemedMain.trayIcon.ShowBalloonTip(3);
+                    NotificationHandler.trayIcon.BalloonTipTitle = "Test Notification";
+                    NotificationHandler.trayIcon.BalloonTipText = "This is just a test";
+                    NotificationHandler.trayIcon.ShowBalloonTip(3);
                 }
             }
             else
@@ -799,10 +796,6 @@ namespace IssueTimeTracker.Forms
             Setting.Value.Notification_Scale = (int)Notification_Scale.Value;
             Setting.Value.Notification_Sound = Notification_SoundComboBox.SelectedItem.ToString();
             Setting.Value.Notification_WindowsNotification = (Jira_WindowsNotification.SelectedIndex == 1);
-            if (Setting.Value.Notification_WindowsNotification)
-                Setting.Value.Jira_ShowTrayIcon = true;
-            else
-                NotificationHandler.HideTrayIcon(new object(), new EventArgs());
             Setting.Value.Notification_TextNotification = Notification_TextNotification.Checked;
             Setting.Value.Notification_PhoneNumber = Notification_PhoneNumber.Text;
             if (Notification_Carrier.SelectedItem != null)
@@ -834,8 +827,8 @@ namespace IssueTimeTracker.Forms
                 case 2:
                     Setting.Value.Jira_Mode = Classes.JiraMode.WebBrowser;
                     break;
-
             }
+            Setting.Value.Jira_SLAs = new List<SLA>((BindingList<SLA>)jiraSLAGrid.DataSource);
 
             Setting.Save();
 

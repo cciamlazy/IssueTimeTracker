@@ -60,7 +60,7 @@
             this.TaskLabel = new System.Windows.Forms.Label();
             this.IssueNumber = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.JiraChecker = new System.Windows.Forms.Timer(this.components);
+            this.JiraTicketChecker = new System.Windows.Forms.Timer(this.components);
             this.IssueNumberCombo = new System.Windows.Forms.ComboBox();
             this.MessageWatcher = new System.Windows.Forms.Timer(this.components);
             this.APSCheckbox = new System.Windows.Forms.CheckBox();
@@ -490,10 +490,10 @@
             this.panel1.Size = new System.Drawing.Size(263, 1);
             this.panel1.TabIndex = 130;
             // 
-            // JiraChecker
+            // JiraTicketChecker
             // 
-            this.JiraChecker.Interval = 30000;
-            this.JiraChecker.Tick += new System.EventHandler(this.JiraChecker_Tick);
+            this.JiraTicketChecker.Interval = 30000;
+            this.JiraTicketChecker.Tick += new System.EventHandler(this.JiraChecker_Tick);
             // 
             // IssueNumberCombo
             // 
@@ -625,7 +625,7 @@
             this.logBrowserToolStripMenuItem.BackColor = System.Drawing.Color.White;
             this.logBrowserToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.logBrowserToolStripMenuItem.Name = "logBrowserToolStripMenuItem";
-            this.logBrowserToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.logBrowserToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.logBrowserToolStripMenuItem.Text = "Log Browser";
             this.logBrowserToolStripMenuItem.Click += new System.EventHandler(this.logBrowserToolStripMenuItem_Click);
             // 
@@ -635,7 +635,7 @@
             this.jiraBrowserToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.jiraBrowserToolStripMenuItem.Enabled = false;
             this.jiraBrowserToolStripMenuItem.Name = "jiraBrowserToolStripMenuItem";
-            this.jiraBrowserToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.jiraBrowserToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.jiraBrowserToolStripMenuItem.Text = "Jira Browser";
             this.jiraBrowserToolStripMenuItem.Click += new System.EventHandler(this.jiraBrowserToolStripMenuItem_Click);
             // 
@@ -644,7 +644,7 @@
             this.notesToolStripMenuItem.BackColor = System.Drawing.Color.White;
             this.notesToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.notesToolStripMenuItem.Name = "notesToolStripMenuItem";
-            this.notesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.notesToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.notesToolStripMenuItem.Text = "Notes";
             this.notesToolStripMenuItem.Click += new System.EventHandler(this.notesToolStripMenuItem_Click);
             // 
@@ -652,7 +652,7 @@
             // 
             this.taskListToolStripMenuItem.BackColor = System.Drawing.Color.White;
             this.taskListToolStripMenuItem.Name = "taskListToolStripMenuItem";
-            this.taskListToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.taskListToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.taskListToolStripMenuItem.Text = "Task List";
             this.taskListToolStripMenuItem.Visible = false;
             this.taskListToolStripMenuItem.Click += new System.EventHandler(this.taskListToolStripMenuItem_Click);
@@ -901,7 +901,7 @@
         private System.Windows.Forms.ToolStripMenuItem firstTimeSetupToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem playgroundToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem enterCommandToolStripMenuItem;
-        public System.Windows.Forms.Timer JiraChecker;
+        public System.Windows.Forms.Timer JiraTicketChecker;
         private System.Windows.Forms.ToolStripMenuItem taskListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearChromeCacheToolStripMenuItem;
     }

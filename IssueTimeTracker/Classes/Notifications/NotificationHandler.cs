@@ -4,6 +4,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -20,9 +21,9 @@ namespace IssueTimeTracker.Classes.Helper
         static FormAnimator.AnimationDirection[] Directions = { FormAnimator.AnimationDirection.Up, FormAnimator.AnimationDirection.Down, FormAnimator.AnimationDirection.Left, FormAnimator.AnimationDirection.Right };
         public static NotifyIcon trayIcon;
         
-        public static JiraIssueBrowser jiraTicket;
+        //public static JiraIssueBrowser jiraTicket;
 
-        private static DateTime JiraLastChecked;
+        public static DateTime JiraLastChecked;
         public static JiraCheckingState jiraCheckingState
         {
             get { return _jiraCheckingState; }
@@ -49,29 +50,27 @@ namespace IssueTimeTracker.Classes.Helper
             trayIcon = new NotifyIcon()
             {
                 Icon = Resources.closed,
-                Visible = Setting.Value.Jira_ShowTrayIcon
+                Visible = true
             };
 
             trayIcon.ContextMenu = new ContextMenu(new MenuItem[] {
-                new MenuItem("Check Jira Now", StaticHandler._ThemedMain.JiraChecker_Tick),
+                new MenuItem("Quick Enter Issue #", QuickEnter) {  },
+                new MenuItem("Check Jira Now", TickJiraChecker),
                 new MenuItem("Resume Checking Jira", ResumeCheckingJira),
                 new MenuItem("Pause Checking Jira", StopCheckingJira),
                 new MenuItem("Minimize to system tray", MinimizeToSystemTray),
                 new MenuItem("Restore", RestoreFromSystemTray),
-                new MenuItem("Hide Tray Icon", HideTrayIcon),
             });
 
+            trayMenuItems.Add("QuickEnter", trayMenuItems.Count);
             trayMenuItems.Add("Check", trayMenuItems.Count);
             trayMenuItems.Add("Resume", trayMenuItems.Count);
             trayMenuItems.Add("Pause", trayMenuItems.Count);
             trayMenuItems.Add("Minimize", trayMenuItems.Count);
             trayMenuItems.Add("Restore", trayMenuItems.Count);
-            trayMenuItems.Add("Hide", trayMenuItems.Count);
             
             UpdateTrayItem("Resume", false);
             UpdateTrayItem("Restore", false);
-            if (Setting.Value.Notification_WindowsNotification)
-                UpdateTrayItem("Hide", false);
 
             Carriers.Add("AT&T", "@mms.att.net");
             Carriers.Add("T-Mobile", "@tmomail.net");
@@ -95,18 +94,19 @@ namespace IssueTimeTracker.Classes.Helper
             trayIcon.Dispose();
         }
 
-        private static List<string> laIssuesTexted = new List<string>();
+        private static List<string> IssuesTexted = new List<string>();
 
         public static void ToastNotification(string header, string body, bool sound = true, int duration = -1, string issue = "")
         {
-            if (Setting.Value.Notification_TextNotification && ComputerLocked && issue != "" && !laIssuesTexted.Contains(issue))
+            if (Setting.Value.Notification_TextNotification && ComputerLocked && issue != "" && !IssuesTexted.Contains(issue))
             {
                 WebClient webClient = new WebClient();
                 try
                 {
-                    laIssuesTexted.Add(issue);
+                    string project = TempIssue.Split('-')[0];
+                    IssuesTexted.Add(issue);
                     webClient.DownloadString(MainData.Instance.Domain + string.Format("IssueTimeTracker/PostText.php?email={0}&subject={1}&msg={2}",
-                        (Setting.Value.Notification_PhoneNumber + Carriers[Setting.Value.Notification_Carrier]), header, body + "\r\n" + Setting.Value.Jira_Link + @"projects/LAC/queues/custom/7/" + issue));
+                        (Setting.Value.Notification_PhoneNumber + Carriers[Setting.Value.Notification_Carrier]), header, body + "\r\n" + Setting.Value.Jira_Link + @"projects/" + project + "/issues/" + TempIssue));
                 }
                 catch (Exception ea)
                 {
@@ -125,6 +125,9 @@ namespace IssueTimeTracker.Classes.Helper
                 trayIcon.BalloonTipTitle = header;
                 trayIcon.BalloonTipText = body;
                 trayIcon.BalloonTipClicked += new EventHandler(BalloonTipClick);
+                if (duration == -1)
+                    duration = 30000;
+                trayIcon.Visible = true;
                 trayIcon.ShowBalloonTip(duration);
             }
             else
@@ -158,14 +161,15 @@ namespace IssueTimeTracker.Classes.Helper
             {
                 if (Setting.Value.Jira_Mode == Classes.JiraMode.InApplication)
                 {
-                    jiraTicket = new JiraIssueBrowser();
-                    jiraTicket.Show();
-                    await jiraTicket.NavigateToIssueByKey(TempIssue);
-                    jiraTicket.AddPremadeResponse();
+                    StaticHandler._ThemedMain.jiraTicket = new JiraIssueBrowser();
+                    StaticHandler._ThemedMain.jiraTicket.Show();
+                    await StaticHandler._ThemedMain.jiraTicket.NavigateToIssueByKey(TempIssue);
+                    StaticHandler._ThemedMain.jiraTicket.AddPremadeResponse();
                 }
                 else if (Setting.Value.Jira_Mode == Classes.JiraMode.WebBrowser)
                 {
-                    Process.Start(Setting.Value.Jira_Link + @"projects/LAC/queues/custom/7/" + TempIssue);
+                    string project = TempIssue.Split('-')[0];
+                    Process.Start(Setting.Value.Jira_Link + @"projects/" + project + "/issues/" + TempIssue);
                 }
             }
             TempIssue = "";
@@ -173,12 +177,6 @@ namespace IssueTimeTracker.Classes.Helper
 
         public static void UpdateSystemTrayIcon(bool isCheckingJira)
         {
-            if (!Setting.Value.Jira_ShowTrayIcon && ! Setting.Value.Notification_WindowsNotification)
-            {
-                if (trayIcon != null)
-                    trayIcon.Visible = false;
-                return;
-            }
             if (trayIcon == null)
             {
                 Initialize();
@@ -190,61 +188,64 @@ namespace IssueTimeTracker.Classes.Helper
                 UpdateTrayItem("Resume", false);
                 UpdateTrayItem("Pause", true);
                 trayIcon.Text = "Jira is currently being monitored for new tickets";
+                trayIcon.Icon = Resources.closed_green;
             }
             else
             {
-                if (StaticHandler._ThemedMain._Jira != null)
+                if (JiraChecker._Jira != null)
                 {
 
                     UpdateTrayItem("Resume", true);
                     UpdateTrayItem("Pause", false);
                 }
                 trayIcon.Text = "Jira is not currently being monitored\r\nReason: " + Regex.Replace(Enum.GetName(typeof(JiraCheckingState), jiraCheckingState), "(\\B[A-Z])", " $1");
+                trayIcon.Icon = Resources.closed_red;
             }
-            if (Setting.Value.Notification_WindowsNotification)
-                UpdateTrayItem("Hide", false);
-            else
-                UpdateTrayItem("Hide", true);
         }
 
-        private static void JiraCheckerCorrector()
+        public static void JiraCheckerCorrector()
         {
             if (JiraLastChecked == null)
                 JiraLastChecked = DateTime.Now;
 
-            if (JiraLastChecked.Second + 60 < DateTime.Now.Second && StaticHandler._ThemedMain.JiraChecker.Enabled)
+            if (JiraLastChecked.Second + 60 < DateTime.Now.Second && StaticHandler._ThemedMain.JiraTicketChecker.Enabled)
                 jiraCheckingState = JiraCheckingState.Unknown;
-            else if (StaticHandler._ThemedMain.JiraChecker.Enabled)
+            else if (StaticHandler._ThemedMain.JiraTicketChecker.Enabled)
                 jiraCheckingState = JiraCheckingState.Checking;
-            else if (!StaticHandler._ThemedMain.JiraChecker.Enabled)
+            else if (!StaticHandler._ThemedMain.JiraTicketChecker.Enabled)
                 jiraCheckingState = JiraCheckingState.Disabled;
         }
 
         public static void MinimizeToSystemTray(object Sender, EventArgs e)
         {
+            trayIcon.Visible = true;
             StaticHandler._ThemedMain.Hide();
             UpdateTrayItem("Minimize", false);
             UpdateTrayItem("Restore", true);
         }
 
+        public static void QuickEnter(object Sender, EventArgs e)
+        {
+            StaticHandler._ThemedMain.QuickUse();
+        }
+
+        public static  void TickJiraChecker(object Sender, EventArgs e)
+        {
+            StaticHandler._ThemedMain.JiraChecker_Tick(Sender, e);
+        }
+
         public static void RestoreFromSystemTray(object Sender, EventArgs e)
         {
             StaticHandler._ThemedMain.Show();
+            if (!StaticHandler._ThemedMain.IsOnScreen(StaticHandler._ThemedMain))
+                StaticHandler._ThemedMain.Location = new Point(Screen.PrimaryScreen.WorkingArea.X + 400, Screen.PrimaryScreen.WorkingArea.Y + 100);
             UpdateTrayItem("Minimize", true);
             UpdateTrayItem("Restore", false);
         }
 
-        public static void HideTrayIcon(object Sender, EventArgs e)
-        {
-            Setting.Value.Jira_ShowTrayIcon = false;
-            Setting.Save();
-            if (trayIcon != null)
-                trayIcon.Visible = false;
-        }
-
         public static void StopCheckingJira(object Sender, EventArgs e)
         {
-            StaticHandler._ThemedMain.JiraChecker.Enabled = false;
+            StaticHandler._ThemedMain.JiraTicketChecker.Enabled = false;
             jiraCheckingState = JiraCheckingState.Disabled;
         }
 
@@ -256,7 +257,7 @@ namespace IssueTimeTracker.Classes.Helper
             {
                 if (Program.CheckForInternetConnection())
                 {
-                    StaticHandler._ThemedMain.JiraChecker.Enabled = true;
+                    StaticHandler._ThemedMain.JiraTicketChecker.Enabled = true;
                     jiraCheckingState = JiraCheckingState.Checking;
                 }
                 else
@@ -267,7 +268,7 @@ namespace IssueTimeTracker.Classes.Helper
             }
             else
             {
-                StaticHandler._ThemedMain.JiraChecker.Enabled = true;
+                StaticHandler._ThemedMain.JiraTicketChecker.Enabled = true;
                 jiraCheckingState = JiraCheckingState.Checking;
             }
         }

@@ -17,7 +17,6 @@ namespace IssueTimeTracker
         #region Variables
         public static Main _Main;
         public static ThemedMain _ThemedMain;
-        public static int JiraFailCount = 0;
         public static Notes Notes = new Notes();
         #endregion
     }

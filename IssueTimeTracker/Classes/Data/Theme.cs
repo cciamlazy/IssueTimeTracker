@@ -102,11 +102,18 @@ namespace IssueTimeTracker.Classes
                         c.ForeColor = OtherForeground;
                     else
                         c.ForeColor = Foreground;
-                
+
                     if (c.GetType() == typeof(CheckBox))
                     {
                         CheckBox b = (CheckBox)c;
                         b.ForeColor = Foreground;
+                    }
+                    else if (c.GetType() == typeof(LinkLabel))
+                    {
+                        LinkLabel l = (LinkLabel)c;
+                        l.LinkColor = Foreground;
+                        l.VisitedLinkColor = SelectedForeground;
+                        l.ActiveLinkColor = SelectedBackground;
                     }
 
                     if (c.GetType() == typeof(Button) && (c.Tag == null || c.Tag.ToString() != "NoTheme"))

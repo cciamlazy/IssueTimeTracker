@@ -33,7 +33,7 @@ namespace IssueTimeTracker.Forms
             RightClickAttachment = new ContextMenuStrip(); //Create a new menu strip for attachment
             RightClickAttachment.Items.AddRange(new ToolStripItem[] { DeleteAttachment }); //Add the delete button to the menu
 
-            Setting.Value.CurrentTheme.ApplyTheme(this, new Type[] { typeof(Label), typeof(TextBox), typeof(ComboBox), typeof(Button), typeof(Panel), typeof(ListView), typeof(Button), typeof(ColumnHeader) });
+            Setting.Value.CurrentTheme.ApplyTheme(this, new Type[] { typeof(Label), typeof(LinkLabel), typeof(TextBox), typeof(ComboBox), typeof(Button), typeof(Panel), typeof(ListView), typeof(Button), typeof(ColumnHeader) });
         }
 
         #region Queue Buttons
@@ -141,6 +141,8 @@ namespace IssueTimeTracker.Forms
         /// </summary>
         private async void LoadQueues()
         {
+            if (!Program.CheckForInternetConnection())
+                return;
             if (StaticHandler._Main != null)
             {
                 StaticHandler._Main._Jira.Issues.MaxIssuesPerRequest = 25;
@@ -158,17 +160,17 @@ namespace IssueTimeTracker.Forms
             }
             if (StaticHandler._ThemedMain != null)
             {
-                StaticHandler._ThemedMain._Jira.Issues.MaxIssuesPerRequest = 25;
-                var issues = await StaticHandler._ThemedMain._Jira.Issues.GetIssuesFromJqlAsync("project = LAC AND resolution = unresolved");
+                JiraChecker._Jira.Issues.MaxIssuesPerRequest = 25;
+                var issues = await JiraChecker._Jira.Issues.GetIssuesFromJqlAsync("project = LAC AND resolution = unresolved");
                 AllOpenNumber.Text = issues.Count().ToString();
-                issues = await StaticHandler._ThemedMain._Jira.Issues.GetIssuesFromJqlAsync("project = LAC AND resolution = unresolved AND assignee is empty");
+                issues = await JiraChecker._Jira.Issues.GetIssuesFromJqlAsync("project = LAC AND resolution = unresolved AND assignee is empty");
                 UnassignedNumber.Text = issues.Count().ToString();
-                issues = await StaticHandler._ThemedMain._Jira.Issues.GetIssuesFromJqlAsync("project = LAC AND resolution = unresolved AND assignee = currentUser()");
+                issues = await JiraChecker._Jira.Issues.GetIssuesFromJqlAsync("project = LAC AND resolution = unresolved AND assignee = currentUser()");
                 AssignedNumber.Text = issues.Count().ToString();
-                issues = await StaticHandler._ThemedMain._Jira.Issues.GetIssuesFromJqlAsync("project = LAC AND resolution = unresolved AND status = 'waiting for customer'");
+                issues = await JiraChecker._Jira.Issues.GetIssuesFromJqlAsync("project = LAC AND resolution = unresolved AND status = 'waiting for customer'");
                 WaitingNumber.Text = issues.Count().ToString();
                 string date = DateTime.Now.AddDays(-6).ToString("yyyy-MM-dd");
-                issues = await StaticHandler._ThemedMain._Jira.Issues.GetIssuesFromJqlAsync("project = LAC AND status = resolved AND resolutiondate > " + date);
+                issues = await JiraChecker._Jira.Issues.GetIssuesFromJqlAsync("project = LAC AND status = resolved AND resolutiondate > " + date);
                 RecentNumber.Text = issues.Count().ToString();
             }
         }
@@ -183,14 +185,14 @@ namespace IssueTimeTracker.Forms
             if (StaticHandler._Main != null)
                 StaticHandler._Main._Jira.Issues.MaxIssuesPerRequest = 25; //Set the Max Issues per Request to 25
             if (StaticHandler._ThemedMain != null)
-                StaticHandler._ThemedMain._Jira.Issues.MaxIssuesPerRequest = 25; //Set the Max Issues per Request to 25
+                JiraChecker._Jira.Issues.MaxIssuesPerRequest = 25; //Set the Max Issues per Request to 25
             IPagedQueryResult<Issue> issues = null; //Creates a variable to store the issues in outside the try-catch statement
             try
             {
                 if (StaticHandler._Main != null)
                     issues = await StaticHandler._Main._Jira.Issues.GetIssuesFromJqlAsync(jql); //Attempt to pull the issues
                 if (StaticHandler._ThemedMain != null)
-                    issues = await StaticHandler._ThemedMain._Jira.Issues.GetIssuesFromJqlAsync(jql); //Attempt to pull the issues
+                    issues = await JiraChecker._Jira.Issues.GetIssuesFromJqlAsync(jql); //Attempt to pull the issues
             }
             catch
             {
@@ -203,8 +205,8 @@ namespace IssueTimeTracker.Forms
                     }
                     if (StaticHandler._ThemedMain != null)
                     {
-                        StaticHandler._ThemedMain._Jira = Atlassian.Jira.Jira.CreateRestClient(Setting.Value.Jira_Link, Setting.Value.Jira_Username, Encryption.Helper.ConvertToUnsecureString(StaticHandler._ThemedMain.JiraPassword)); //Since it failed, try relogging in
-                        issues = await StaticHandler._ThemedMain._Jira.Issues.GetIssuesFromJqlAsync(jql); //Attempt to pull the issues again
+                        JiraChecker._Jira = Atlassian.Jira.Jira.CreateRestClient(Setting.Value.Jira_Link, Setting.Value.Jira_Username, Encryption.Helper.ConvertToUnsecureString(JiraChecker.JiraPassword)); //Since it failed, try relogging in
+                        issues = await JiraChecker._Jira.Issues.GetIssuesFromJqlAsync(jql); //Attempt to pull the issues again
                     }
                 }
                 catch (Exception e)

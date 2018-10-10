@@ -27,6 +27,9 @@ namespace IssueTimeTracker
                 Value = Serializer<Classes.Settings>.LoadFromXMLFile(path);
             else
                 Value = Serializer<Classes.Settings>.LoadFromJSONFile(path);
+
+            if(Value.Jira_SLAs.Count < 1)
+                Value.Jira_SLAs.Add(new Classes.Data.SLA() { JiraProject = "LAC", Minutes = 15 });
         }
 
         public static void Create()

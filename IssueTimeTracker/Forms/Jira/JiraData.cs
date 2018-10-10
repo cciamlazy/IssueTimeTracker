@@ -63,8 +63,8 @@ namespace IssueTimeTracker.Forms.Jira
                 }
                 if (StaticHandler._ThemedMain != null)
                 {
-                    StaticHandler._ThemedMain._Jira.Issues.MaxIssuesPerRequest = (int)maxIssuesPerRequest.Value;
-                    issues = await StaticHandler._ThemedMain._Jira.Issues.GetIssuesFromJqlAsync(jql); //Attempt to pull the issues
+                    JiraChecker._Jira.Issues.MaxIssuesPerRequest = (int)maxIssuesPerRequest.Value;
+                    issues = await JiraChecker._Jira.Issues.GetIssuesFromJqlAsync(jql); //Attempt to pull the issues
                 }
                 infoLabel.Text = "Loaded " + issues.Count<Issue>() + " issues";
                 infoLabel.ForeColor = Color.Black;

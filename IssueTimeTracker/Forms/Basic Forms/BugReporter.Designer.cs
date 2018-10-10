@@ -124,6 +124,7 @@
             this.Name = "BugReporter";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "BugReporter";
+            this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
 

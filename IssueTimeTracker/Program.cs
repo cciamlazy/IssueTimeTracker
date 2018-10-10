@@ -55,7 +55,7 @@ namespace IssueTimeTracker
                 Serializer<ErrorLog>.WriteToJSONFile(log, path);
 
                 if (e.Source == "Atlassian.Jira")
-                    StaticHandler.JiraFailCount++;
+                    JiraChecker.JiraFailCount++;
             }
             catch
             {
@@ -191,10 +191,10 @@ namespace IssueTimeTracker
             /*if (Properties.Settings.Default.Timer_TestStyle)
                 Application.Run(new TestIssueTimeTracker());
             else*/
-            if (Setting.Value.Timer_Themes)
+            //if (Setting.Value.Timer_Themes)
                 Application.Run(new ThemedMain());
-            else
-                Application.Run(new Main());
+            //else
+            //    Application.Run(new Main());
         }
 
         private static void UpdateToOnePointSeven()

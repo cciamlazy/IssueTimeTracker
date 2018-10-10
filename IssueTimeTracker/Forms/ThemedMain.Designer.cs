@@ -73,6 +73,7 @@
             this.endToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.suggestionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.browserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logBrowserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -97,8 +98,7 @@
             this.commandToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Global_Timer = new System.Windows.Forms.Timer(this.components);
             this.LACounty = new System.Windows.Forms.Timer(this.components);
-            this.JiraChecker = new System.Windows.Forms.Timer(this.components);
-            this.Animator = new System.Windows.Forms.Timer(this.components);
+            this.JiraTicketChecker = new System.Windows.Forms.Timer(this.components);
             this.TitleBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.IconI)).BeginInit();
             this.MainPanel.SuspendLayout();
@@ -645,6 +645,7 @@
             this.endToolStripMenuItem,
             this.settingsToolStripMenuItem,
             this.suggestionToolStripMenuItem,
+            this.aboutToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -698,6 +699,15 @@
             this.suggestionToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.suggestionToolStripMenuItem.Text = "Make a Suggestion";
             this.suggestionToolStripMenuItem.Click += new System.EventHandler(this.suggestionToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.BackColor = System.Drawing.Color.White;
+            this.aboutToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
@@ -847,56 +857,56 @@
             this.messengerToolStripMenuItem.BackColor = System.Drawing.Color.White;
             this.messengerToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.messengerToolStripMenuItem.Name = "messengerToolStripMenuItem";
-            this.messengerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.messengerToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.messengerToolStripMenuItem.Text = "Messenger";
             this.messengerToolStripMenuItem.Click += new System.EventHandler(this.messengerToolStripMenuItem_Click);
             // 
             // applyThemeToolStripMenuItem
             // 
             this.applyThemeToolStripMenuItem.Name = "applyThemeToolStripMenuItem";
-            this.applyThemeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.applyThemeToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.applyThemeToolStripMenuItem.Text = "Apply Theme";
             this.applyThemeToolStripMenuItem.Click += new System.EventHandler(this.applyThemeToolStripMenuItem_Click);
             // 
             // testToolStripMenuItem
             // 
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.testToolStripMenuItem.Text = "Test";
             this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
             // 
             // dataVisualizerToolStripMenuItem
             // 
             this.dataVisualizerToolStripMenuItem.Name = "dataVisualizerToolStripMenuItem";
-            this.dataVisualizerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.dataVisualizerToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.dataVisualizerToolStripMenuItem.Text = "Data Visualizer";
             this.dataVisualizerToolStripMenuItem.Click += new System.EventHandler(this.dataVisualizerToolStripMenuItem_Click);
             // 
             // firstTimeSetupToolStripMenuItem
             // 
             this.firstTimeSetupToolStripMenuItem.Name = "firstTimeSetupToolStripMenuItem";
-            this.firstTimeSetupToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.firstTimeSetupToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.firstTimeSetupToolStripMenuItem.Text = "First Time Setup";
             this.firstTimeSetupToolStripMenuItem.Click += new System.EventHandler(this.firstTimeSetupToolStripMenuItem_Click);
             // 
             // playgroundToolStripMenuItem
             // 
             this.playgroundToolStripMenuItem.Name = "playgroundToolStripMenuItem";
-            this.playgroundToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.playgroundToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.playgroundToolStripMenuItem.Text = "Playground";
             this.playgroundToolStripMenuItem.Click += new System.EventHandler(this.playgroundToolStripMenuItem_Click);
             // 
             // colorPickerToolStripMenuItem
             // 
             this.colorPickerToolStripMenuItem.Name = "colorPickerToolStripMenuItem";
-            this.colorPickerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.colorPickerToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.colorPickerToolStripMenuItem.Text = "Color Picker";
             this.colorPickerToolStripMenuItem.Click += new System.EventHandler(this.colorPickerToolStripMenuItem_Click);
             // 
             // commandToolStripMenuItem
             // 
             this.commandToolStripMenuItem.Name = "commandToolStripMenuItem";
-            this.commandToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.commandToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.commandToolStripMenuItem.Text = "Command";
             this.commandToolStripMenuItem.Click += new System.EventHandler(this.commandToolStripMenuItem_Click);
             // 
@@ -912,15 +922,10 @@
             this.LACounty.Interval = 800000;
             this.LACounty.Tick += new System.EventHandler(this.LACounty_Tick);
             // 
-            // JiraChecker
+            // JiraTicketChecker
             // 
-            this.JiraChecker.Interval = 30000;
-            this.JiraChecker.Tick += new System.EventHandler(this.JiraChecker_Tick);
-            // 
-            // Animator
-            // 
-            this.Animator.Interval = 66;
-            this.Animator.Tick += new System.EventHandler(this.Animator_Tick);
+            this.JiraTicketChecker.Interval = 30000;
+            this.JiraTicketChecker.Tick += new System.EventHandler(this.JiraChecker_Tick);
             // 
             // ThemedMain
             // 
@@ -931,6 +936,7 @@
             this.Controls.Add(this.MainPanel);
             this.Controls.Add(this.IconI);
             this.Controls.Add(this.TitleBar);
+            this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1021,9 +1027,9 @@
         private System.Windows.Forms.ToolStripMenuItem playgroundToolStripMenuItem;
         private System.Windows.Forms.Timer Global_Timer;
         private System.Windows.Forms.Timer LACounty;
-        public System.Windows.Forms.Timer JiraChecker;
+        public System.Windows.Forms.Timer JiraTicketChecker;
         private System.Windows.Forms.ToolStripMenuItem colorPickerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem commandToolStripMenuItem;
-        private System.Windows.Forms.Timer Animator;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
     }
 }

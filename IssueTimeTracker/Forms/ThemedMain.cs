@@ -75,9 +75,9 @@ namespace IssueTimeTracker
 
         //
 
-        public Jira _Jira { get { return jira; } set { jira = value; MainData.Instance.ApproxLoginCount++; MainData.Export(); } }
+        /*public Jira _Jira { get { return jira; } set { jira = value; MainData.Instance.ApproxLoginCount++; MainData.Export(); } }
         private Jira jira;
-        public SecureString JiraPassword;
+        public SecureString JiraPassword;*/
         public MasterClock MainWatch = new MasterClock();
 
         //
@@ -111,6 +111,7 @@ namespace IssueTimeTracker
 
         bool dontUpdate = false;
 
+        /*
         private DateTime JiraLastChecked;
         public NotifyIcon trayIcon;
         public JiraCheckingState jiraCheckingState
@@ -126,6 +127,7 @@ namespace IssueTimeTracker
             }
         }
         private JiraCheckingState _jiraCheckingState = JiraCheckingState.Disabled;
+        */
 
         #endregion
 
@@ -150,29 +152,30 @@ namespace IssueTimeTracker
 
             APSCheckbox.Visible = Setting.Value.General_APSUtlizer;
 
-            if (Setting.Value.General_JiraAccess && Setting.Value.Jira_AutoCheck && !JiraChecker.Enabled && StaticHandler.JiraFailCount < 5)
+            if (Setting.Value.General_JiraAccess && Setting.Value.Jira_AutoCheck && !JiraTicketChecker.Enabled && JiraChecker.JiraFailCount < 5)
             {
                 if (Program.CheckForInternetConnection())
                 {
-                    if (_Jira == null)
+                    if (JiraChecker._Jira == null)
                     {
                         jiraLogin.Show();
                     }
                     //JiraChecker.Enabled = true;
                 }
             }
-            else if (!Setting.Value.Jira_AutoCheck && JiraChecker.Enabled)
+            else if (!Setting.Value.Jira_AutoCheck && JiraTicketChecker.Enabled)
             {
-                _Jira = null;
-                JiraChecker.Enabled = false;
+                JiraChecker._Jira = null;
+                JiraTicketChecker.Enabled = false;
+                NotificationHandler.jiraCheckingState = JiraCheckingState.Disabled;
             }
             //UpdateSystemTrayIcon(JiraChecker.Enabled);
             if (!Program.CheckForInternetConnection())
-                jiraCheckingState = JiraCheckingState.LostInternet;
-            else if (JiraChecker.Enabled)
-                jiraCheckingState = JiraCheckingState.Checking;
+                NotificationHandler.jiraCheckingState = JiraCheckingState.LostInternet;
+            else if (JiraTicketChecker.Enabled)
+                NotificationHandler.jiraCheckingState = JiraCheckingState.Checking;
             else
-                jiraCheckingState = JiraCheckingState.Disabled;
+                NotificationHandler.jiraCheckingState = JiraCheckingState.Disabled;
 
             notesToolStripMenuItem.Visible = Setting.Value.Timer_Notes;
             /*Technical Support
@@ -189,7 +192,7 @@ namespace IssueTimeTracker
                     TaskLabel.Text = "Task:";
                     break;
                 case Position.ImplementationEngineer:
-                    TaskLabel.Text = "Issue #:";
+                    TaskLabel.Text = "Task:";
                     break;
                 case Position.BusinessAnalyst:
                     TaskLabel.Text = "Task:";
@@ -218,7 +221,7 @@ namespace IssueTimeTracker
             CalculateCurrentTaskLabel();
             this.ResumeLayout();
 
-            JiraCheckerCorrector();
+            NotificationHandler.JiraCheckerCorrector();
         }
 
 
@@ -438,194 +441,134 @@ namespace IssueTimeTracker
 
         private void LACounty_Tick(object sender, EventArgs e)
         {
-            LACountyNotification();
+            JiraChecker.JiraNotification();
         }
-
-        bool lostInternet = false;
 
         public void JiraChecker_Tick(object sender, EventArgs e)
         {
-            if (_Jira == null || StaticHandler.JiraFailCount > 5)
-            {
-                jiraCheckingState = JiraCheckingState.Unknown;
-                return;
-            }
-
-            bool internet = Program.CheckForInternetConnection();
-
-            if (!internet && !lostInternet)
-            {
-                lostInternet = true;
-                ToastNotification("Lost Connection", "You've lost internet connection. Jira will not be checked in the meantime", 30, FormAnimator.AnimationMethod.Slide, Directions[Setting.Value.Notification_Direction]);
-                jiraBrowserToolStripMenuItem.Enabled = false;
-                jiraCheckingState = JiraCheckingState.LostInternet;
-                return;
-            }
-            else if (!internet && lostInternet)
-                return;
-            else if (internet && lostInternet)
-            {
-                lostInternet = false;
-                ToastNotification("Connection Established", "Jira checking will resume", 5, FormAnimator.AnimationMethod.Slide, Directions[Setting.Value.Notification_Direction]);
-                jiraBrowserToolStripMenuItem.Enabled = true;
-                jiraCheckingState = JiraCheckingState.Checking;
-            }
-            if (StaticHandler.JiraFailCount == 5)
-            {
-                StaticHandler.JiraFailCount++;
-                ToastNotification("Jira Failed", "Jira failed at getting LAC issues too many times. Log in again from settings", 5, FormAnimator.AnimationMethod.Slide, Directions[Setting.Value.Notification_Direction]);
-                jiraBrowserToolStripMenuItem.Enabled = false;
-                jiraCheckingState = JiraCheckingState.FailedLogin;
-                return;
-            }
-
-            JiraCheck();
+            JiraChecker.CheckJira();
         }
 
-        bool relogin = false;
+            /*bool lostInternet = false;
 
-        async void JiraCheck(bool loop = false)
-        {
-            if (relogin && StaticHandler.JiraFailCount > 3 && Setting.Value.Jira_Username != "" && Setting.Value.Jira_Username != "!" && JiraPassword != null)
+            public void JiraChecker_Tick(object sender, EventArgs e)
             {
-                _Jira = Jira.CreateRestClient(Setting.Value.Jira_Link, Setting.Value.Jira_Username, Encryption.Helper.ConvertToUnsecureString(JiraPassword), new JiraRestClientSettings() { EnableRequestTrace = true });
-                relogin = false;
-                jiraBrowserToolStripMenuItem.Enabled = true;
-            }
-            _Jira.Issues.MaxIssuesPerRequest = 5;
-            try
-            {
-                IEnumerable<Issue> jiraIssues = await _Jira.Issues.GetIssuesFromJqlAsync("project = LAC AND resolution = unresolved AND assignee is empty");
-                jiraBrowserToolStripMenuItem.Enabled = true;
-                foreach (var issue in jiraIssues)
+                if (_Jira == null || StaticHandler.JiraFailCount > 5)
                 {
-                    if (issue.Project.Equals("LAC") && (issue.Assignee == null || issue.Assignee == ""))
-                        LACountyNotification("\n" + issue.Key.Value + " - " + GetTimeLeft(issue.Created.Value, 15).ToString() + " minutes left\n" + issue.Summary, issue.Key.Value);
+                    NotificationHandler.jiraCheckingState = JiraCheckingState.Unknown;
+                    return;
                 }
-                JiraLastChecked = DateTime.Now;
-                jiraCheckingState = JiraCheckingState.Checking;
-            }
-            catch
-            {
-                jiraBrowserToolStripMenuItem.Enabled = false;
-                jiraCheckingState = JiraCheckingState.FailedLogin;
-                if (StaticHandler.JiraFailCount > 0 && Setting.Value.Jira_Username != "" && Setting.Value.Jira_Username != "!" && JiraPassword != null)
+
+                bool internet = Program.CheckForInternetConnection();
+
+                if (!internet && !lostInternet)
                 {
-                    _Jira = Jira.CreateRestClient(Setting.Value.Jira_Link, Setting.Value.Jira_Username, Encryption.Helper.ConvertToUnsecureString(JiraPassword), new JiraRestClientSettings() { EnableRequestTrace = true });
+                    lostInternet = true;
+                    NotificationHandler.ToastNotification("Lost Connection", "You've lost internet connection. Jira will not be checked in the meantime");
+                    jiraBrowserToolStripMenuItem.Enabled = false;
+                    NotificationHandler.jiraCheckingState = JiraCheckingState.LostInternet;
+                    return;
                 }
-                if (!loop)
-                    JiraCheck(true);
-                else
+                else if (!internet && lostInternet)
+                    return;
+                else if (internet && lostInternet)
+                {
+                    lostInternet = false;
+                    NotificationHandler.ToastNotification("Connection Established", "Jira checking will resume");
+                    jiraBrowserToolStripMenuItem.Enabled = true;
+                    NotificationHandler.jiraCheckingState = JiraCheckingState.Checking;
+                }
+                if (StaticHandler.JiraFailCount == 5)
                 {
                     StaticHandler.JiraFailCount++;
-                    jiraCheckingState = JiraCheckingState.FailedLogin;
-
+                    NotificationHandler.ToastNotification("Jira Failed", "Jira failed at getting LAC issues too many times. Log in again from settings");
+                    jiraBrowserToolStripMenuItem.Enabled = false;
+                    NotificationHandler.jiraCheckingState = JiraCheckingState.FailedLogin;
+                    return;
                 }
+
+                JiraCheck();
             }
-        }
 
-        private int GetTimeLeft(DateTime time, int minutes)
-        {
-            return (int)(minutes - (DateTime.Now - time).TotalMinutes);
-        }
+            bool relogin = false;
 
-        private async void LACountyNotification(string _jira = "", string laissue = "")
-        {
-            int duration = -1;
-
-            if (_jira != "")
-                duration = 30;
-            else
-                duration = Setting.Value.Notification_Frequency * 60;
-
-            var animationMethod = FormAnimator.AnimationMethod.Slide;
-
-            var animationDirection = Directions[Setting.Value.Notification_Direction];
-            string jira = "";
-            if (_jira == "" && StaticHandler.JiraFailCount < 5 && Setting.Value.Jira_AutoCheck && _Jira != null)
+            async void JiraCheck(bool loop = false)
             {
-
+                if (relogin && StaticHandler.JiraFailCount > 3 && Setting.Value.Jira_Username != "" && Setting.Value.Jira_Username != "!" && JiraPassword != null)
+                {
+                    _Jira = Jira.CreateRestClient(Setting.Value.Jira_Link, Setting.Value.Jira_Username, Encryption.Helper.ConvertToUnsecureString(JiraPassword), new JiraRestClientSettings() { EnableRequestTrace = true });
+                    relogin = false;
+                    jiraBrowserToolStripMenuItem.Enabled = true;
+                }
+                _Jira.Issues.MaxIssuesPerRequest = 5;
                 try
                 {
-                    IEnumerable<Issue> jiraIssues = await _Jira.Issues.GetIssuesFromJqlAsync("Project = LAC AND assignee = ''");
+                    IEnumerable<Issue> jiraIssues = await _Jira.Issues.GetIssuesFromJqlAsync("project = LAC AND resolution = unresolved AND assignee is empty");
+                    jiraBrowserToolStripMenuItem.Enabled = true;
                     foreach (var issue in jiraIssues)
                     {
                         if (issue.Project.Equals("LAC") && (issue.Assignee == null || issue.Assignee == ""))
-                        {
-                            jira += "\n" + issue.Key.Value + " - " + GetTimeLeft(issue.Created.Value, 15).ToString() + " minutes left\n" + issue.Summary;
-                            laissue = issue.Key.Value;
-                        }
+                            LACountyNotification("\n" + issue.Key.Value + " - " + GetTimeLeft(issue.Created.Value, 15).ToString() + " minutes left\n" + issue.Summary, issue.Key.Value);
+                    }
+                    NotificationHandler.JiraLastChecked = DateTime.Now;
+                    NotificationHandler.jiraCheckingState = JiraCheckingState.Checking;
+                }
+                catch
+                {
+                    jiraBrowserToolStripMenuItem.Enabled = false;
+                    NotificationHandler.jiraCheckingState = JiraCheckingState.FailedLogin;
+                    if (StaticHandler.JiraFailCount > 0 && Setting.Value.Jira_Username != "" && Setting.Value.Jira_Username != "!" && JiraPassword != null)
+                    {
+                        _Jira = Jira.CreateRestClient(Setting.Value.Jira_Link, Setting.Value.Jira_Username, Encryption.Helper.ConvertToUnsecureString(JiraPassword), new JiraRestClientSettings() { EnableRequestTrace = true });
+                    }
+                    if (!loop)
+                        JiraCheck(true);
+                    else
+                    {
+                        StaticHandler.JiraFailCount++;
+                        NotificationHandler.jiraCheckingState = JiraCheckingState.FailedLogin;
+
                     }
                 }
-                catch { StaticHandler.JiraFailCount++; }
             }
-            else
-                jira = _jira;
 
-            ToastNotification("LA County Issues", (jira != "" ? "New Jira Issue" + jira : (Setting.Value.Jira_AutoCheck ? "No new issues found\n" : "Jira Auto Check is Off\nCheck LA County for issues")), duration, animationMethod, animationDirection, laissue);
-        }
-
-        public static void ToastNotification(string header, string body, int duration = -1, FormAnimator.AnimationMethod method = FormAnimator.AnimationMethod.Slide, FormAnimator.AnimationDirection direction = FormAnimator.AnimationDirection.Up, string issue = "")
-        {
-            if (Setting.Value.Notification_WindowsNotification)
+            private int GetTimeLeft(DateTime time, int minutes)
             {
-                if (StaticHandler._ThemedMain.trayIcon == null)
+                return (int)(minutes - (DateTime.Now - time).TotalMinutes);
+            }
+
+            private async void LACountyNotification(string _jira = "", string laissue = "")
+            {
+                int duration = -1;
+
+                if (_jira != "")
+                    duration = 30;
+                else
+                    duration = Setting.Value.Notification_Frequency * 60;
+
+                string jira = "";
+                if (_jira == "" && StaticHandler.JiraFailCount < 5 && Setting.Value.Jira_AutoCheck && _Jira != null)
                 {
-                    StaticHandler._ThemedMain.trayIcon = new NotifyIcon()
+
+                    try
                     {
-                        Icon = Resources.closed,
-                        Visible = true
-                    };
+                        IEnumerable<Issue> jiraIssues = await _Jira.Issues.GetIssuesFromJqlAsync("Project = LAC AND assignee = ''");
+                        foreach (var issue in jiraIssues)
+                        {
+                            if (issue.Project.Equals("LAC") && (issue.Assignee == null || issue.Assignee == ""))
+                            {
+                                jira += "\n" + issue.Key.Value + " - " + GetTimeLeft(issue.Created.Value, 15).ToString() + " minutes left\n" + issue.Summary;
+                                laissue = issue.Key.Value;
+                            }
+                        }
+                    }
+                    catch { StaticHandler.JiraFailCount++; }
                 }
-                StaticHandler._ThemedMain.TempIssue = issue;
-                StaticHandler._ThemedMain.trayIcon.BalloonTipTitle = header;
-                StaticHandler._ThemedMain.trayIcon.BalloonTipText = body;
-                StaticHandler._ThemedMain.trayIcon.BalloonTipClicked += new EventHandler(StaticHandler._ThemedMain.BalloonTipClick);
-                StaticHandler._ThemedMain.trayIcon.ShowBalloonTip(duration);
-            }
-            else
-            {
-                var toastNotification = new Notification(header, body, duration, method, direction, -1, issue);
-                PlayNotificationSound(Setting.Value.Notification_Sound);
-                toastNotification.Show();
-            }
-        }
+                else
+                    jira = _jira;
 
-        public string TempIssue = "";
-
-        public async void BalloonTipClick(object sender, EventArgs e)
-        {
-            if (TempIssue != null && TempIssue != "" && Setting.Value.Jira_Mode != Classes.JiraMode.Nothing)
-            {
-                if (Setting.Value.Jira_Mode == Classes.JiraMode.InApplication)
-                {
-                    jiraTicket = new JiraIssueBrowser();
-                    jiraTicket.Show();
-                    await jiraTicket.NavigateToIssueByKey(TempIssue);
-                    jiraTicket.AddPremadeResponse();
-                }
-                else if (Setting.Value.Jira_Mode == Classes.JiraMode.WebBrowser)
-                {
-                    Process.Start(Setting.Value.Jira_Link + @"projects/LAC/queues/custom/7/" + TempIssue);
-                }
-            }
-            TempIssue = "";
-        }
-
-        public static void PlayNotificationSound(string sound)
-        {
-            var soundsFolder = Path.Combine(Program.DataPath, "Sounds");
-            var soundFile = Path.Combine(soundsFolder, sound + ".wav");
-
-            try
-            {
-                using (var player = new System.Media.SoundPlayer(soundFile))
-                {
-                    player.Play();
-                }
-            }
-            catch { }
-        }
+                NotificationHandler.ToastNotification("LA County Issues", (jira != "" ? "New Jira Issue" + jira : (Setting.Value.Jira_AutoCheck ? "No new issues found\n" : "Jira Auto Check is Off\nCheck LA County for issues")), true, duration, laissue);
+            }*/
 
         #endregion
 
@@ -633,10 +576,14 @@ namespace IssueTimeTracker
 
         public void QuickUse()
         {
+            string clip = Clipboard.GetText();
+            if (clip == "" && IssueNumberCombo.Items[0] != null)
+                clip = IssueNumberCombo.Items[0].ToString();
+
             if (IssueNumber.Visible)
-                IssueNumber.Text = Clipboard.GetText();
+                IssueNumber.Text = clip;
             else
-                IssueNumberCombo.Text = Clipboard.GetText();
+                IssueNumberCombo.Text = clip;
             UseTime();
             IssueNumber.Text = "";
             IssueNumberCombo.Text = "";
@@ -789,26 +736,28 @@ namespace IssueTimeTracker
 
         public async void TestNotif()
         {
-            try
+            /*try
             {
-                IEnumerable<Issue> jiraIssues = await _Jira.Issues.GetIssuesFromJqlAsync("Project=LAC");
+                IEnumerable<Issue> jiraIssues = await JiraChecker._Jira.Issues.GetIssuesFromJqlAsync("Project=LAC");
                 string laissue = "";
                 string jira = "";
                 foreach (var issue in jiraIssues)
                 {
                     if (issue.Project.Equals("LAC"))
                     {
-                        jira += "\n" + issue.Key.Value + " - " + GetTimeLeft(issue.Created.Value, 15).ToString() + " minutes left\n" + issue.Summary;
+                        jira += "\n" + issue.Key.Value + " - " + JiraChecker.GetTimeLeft(issue.Created.Value, 15).ToString() + " minutes left\n" + issue.Summary;
                         laissue = issue.Key.Value;
                         break;
                     }
                 }
+                System.Threading.Thread.Sleep(5000);
+                NotificationHandler.ToastNotification("LA County Issues", (laissue != "" ? "\r\n" + Setting.Value.Jira_Link + @"projects/LAC/queues/custom/7/" + laissue + "\r\n\r\n" + jira : ""), false, -1, laissue);
 
-                int duration = 30;
+                //int duration = 30;
 
-                var animationMethod = FormAnimator.AnimationMethod.Slide;
+                //var animationMethod = FormAnimator.AnimationMethod.Slide;
 
-                var animationDirection = Directions[Setting.Value.Notification_Direction];
+                /*var animationDirection = Directions[Setting.Value.Notification_Direction];
                 //ToastNotification("LA County Issues", "New Jira Issue" + jira, duration, animationMethod, animationDirection, laissue);
                 WebClient webClient = new WebClient();
                 try
@@ -825,7 +774,7 @@ namespace IssueTimeTracker
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
-            }
+            }*/
         }
 
         private void CheckForUpdate()
@@ -953,9 +902,6 @@ namespace IssueTimeTracker
             CleanData.CleanJira();
 
             NotificationHandler.Dispose();
-
-            if (trayIcon != null)
-                trayIcon.Visible = false;
         }
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
@@ -1123,7 +1069,7 @@ namespace IssueTimeTracker
                 this.Controls.Add(star);
                 animatedStars.Add(star);
             }
-            Animator.Enabled = true;
+            //Animator.Enabled = true;
         }
 
         private void testToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1184,7 +1130,7 @@ namespace IssueTimeTracker
         }
         #endregion
 
-        public void UpdateSystemTrayIcon(bool isCheckingJira)
+        /*public void UpdateSystemTrayIcon(bool isCheckingJira)
         {
             if (!Setting.Value.Jira_ShowTrayIcon && !Setting.Value.Notification_WindowsNotification)
             {
@@ -1282,7 +1228,7 @@ namespace IssueTimeTracker
                 JiraChecker.Enabled = true;
                 jiraCheckingState = JiraCheckingState.Checking;
             }
-        }
+        }*/
 
         private void enterCommandToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1381,6 +1327,11 @@ namespace IssueTimeTracker
                 p.Location = new Point(p.Location.X + (p.Size.Width / 2), p.Location.Y);
                 p.BringToFront();
             }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new About().Show();
         }
     }
 }

@@ -146,6 +146,7 @@
     <Compile Include="Classes\Data\Reminders\Reminder.cs" />
     <Compile Include="Classes\Data\Reminders\ReminderHandler.cs" />
     <Compile Include="Classes\Data\Reminders\Week.cs" />
+    <Compile Include="Classes\Data\SLA.cs" />
     <Compile Include="Classes\Helper\CleanData.cs" />
     <Compile Include="Classes\Data\Data.cs" />
     <Compile Include="Classes\Deprecated\ColorUtilities.cs" />
@@ -157,8 +158,9 @@
     <Compile Include="Classes\Data\Visualizer\DataVisualizerSeries.cs" />
     <Compile Include="Classes\Data\Visualizer\Filter.cs" />
     <Compile Include="Classes\Helper\MouseHook.cs" />
-    <Compile Include="Classes\Helper\NotificationHandler.cs" />
+    <Compile Include="Classes\Notifications\NotificationHandler.cs" />
     <Compile Include="Classes\Helper\TimerHelper.cs" />
+    <Compile Include="Classes\Jira\JiraChecker.cs" />
     <Compile Include="Classes\Jira\JiraDataSave.cs" />
     <Compile Include="Classes\Data\SmtpAuth.cs" />
     <Compile Include="Classes\Data\Theme.cs" />
@@ -166,8 +168,12 @@
     <Compile Include="Classes\Deprecated\HotKeyLayout.cs" />
     <Compile Include="Classes\Jira\IssuesListItem.cs" />
     <Compile Include="Classes\Jira\JiraName.cs" />
-    <Compile Include="Classes\Jira\JiraComment.cs" />
-    <Compile Include="Classes\Jira\JiraCommentController.cs" />
+    <Compile Include="Classes\Jira\JiraComment.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\Jira\JiraCommentController.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Classes\Helper\MasterClock.cs" />
     <Compile Include="Classes\Messenger\MessageDataJiraData.cs" />
     <Compile Include="Classes\Messenger\MessageHandler.cs" />
@@ -184,27 +190,49 @@
     <Compile Include="Classes\Updater\Update.cs" />
     <Compile Include="Classes\Updater\UpdateData.cs" />
     <Compile Include="Classes\Helper\XMLColor.cs" />
-    <Compile Include="Forms\Basic Forms\ColorPicker\ColorDropper.cs" />
+    <Compile Include="Forms\Basic Forms\About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Basic Forms\About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Basic Forms\ColorPicker\ColorDropper.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Basic Forms\ColorPicker\ColorDropper.Designer.cs">
       <DependentUpon>ColorDropper.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Basic Forms\ColorPicker\AdobeColors.cs" />
-    <Compile Include="Forms\Basic Forms\ColorPicker\ColorPicker.cs" />
+    <Compile Include="Forms\Basic Forms\ColorPicker\ColorPicker.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Basic Forms\ColorPicker\ColorPicker.Designer.cs">
       <DependentUpon>ColorPicker.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Basic Forms\ColorPicker\ctrl2DColorBox.cs" />
-    <Compile Include="Forms\Basic Forms\ColorPicker\ctrlVerticalColorSlider.cs" />
-    <Compile Include="Forms\Basic Forms\ColorPicker\frmColorPicker.cs" />
-    <Compile Include="Forms\Basic Forms\Pin.cs" />
+    <Compile Include="Forms\Basic Forms\ColorPicker\ctrl2DColorBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Basic Forms\ColorPicker\ctrlVerticalColorSlider.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Basic Forms\ColorPicker\frmColorPicker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Basic Forms\Pin.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Basic Forms\Pin.Designer.cs">
       <DependentUpon>Pin.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Basic Forms\Playground.cs" />
+    <Compile Include="Forms\Basic Forms\Playground.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Basic Forms\Playground.Designer.cs">
       <DependentUpon>Playground.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Basic Forms\Themes\ThemeBrowser.cs" />
+    <Compile Include="Forms\Basic Forms\Themes\ThemeBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Basic Forms\Themes\ThemeBrowser.Designer.cs">
       <DependentUpon>ThemeBrowser.cs</DependentUpon>
     </Compile>
@@ -214,110 +242,162 @@
     <Compile Include="Forms\Basic Forms\Themes\ThemeCreator.Designer.cs">
       <DependentUpon>ThemeCreator.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Command.cs" />
+    <Compile Include="Forms\Command.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Command.Designer.cs">
       <DependentUpon>Command.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Data\Advanced.cs" />
+    <Compile Include="Forms\Data\Advanced.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Data\Advanced.Designer.cs">
       <DependentUpon>Advanced.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Basic Forms\BugReporter.cs" />
+    <Compile Include="Forms\Basic Forms\BugReporter.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Basic Forms\BugReporter.Designer.cs">
       <DependentUpon>BugReporter.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Basic Forms\FirstTimeSetup.cs" />
+    <Compile Include="Forms\Basic Forms\FirstTimeSetup.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Basic Forms\FirstTimeSetup.Designer.cs">
       <DependentUpon>FirstTimeSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Data\Reminders\ReminderSetup.cs" />
+    <Compile Include="Forms\Data\Reminders\ReminderSetup.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Data\Reminders\ReminderSetup.Designer.cs">
       <DependentUpon>ReminderSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Data\Reminders\Tasks.cs" />
+    <Compile Include="Forms\Data\Reminders\Tasks.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Data\Reminders\Tasks.Designer.cs">
       <DependentUpon>Tasks.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Data\Visualizer\Builder.cs" />
+    <Compile Include="Forms\Data\Visualizer\Builder.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Data\Visualizer\Builder.Designer.cs">
       <DependentUpon>Builder.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Data\Visualizer\DataVisualizer.cs" />
+    <Compile Include="Forms\Data\Visualizer\DataVisualizer.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Data\Visualizer\DataVisualizer.Designer.cs">
       <DependentUpon>DataVisualizer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Data\GenerateUpdateFile.cs" />
+    <Compile Include="Forms\Data\GenerateUpdateFile.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Data\GenerateUpdateFile.Designer.cs">
       <DependentUpon>GenerateUpdateFile.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Basic Forms\HotKeySetup.cs" />
+    <Compile Include="Forms\Basic Forms\HotKeySetup.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Basic Forms\HotKeySetup.Designer.cs">
       <DependentUpon>HotKeySetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Jira\JiraData.cs" />
+    <Compile Include="Forms\Jira\JiraData.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Jira\JiraData.Designer.cs">
       <DependentUpon>JiraData.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Jira\JiraIssueBrowser.cs" />
+    <Compile Include="Forms\Jira\JiraIssueBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Jira\JiraIssueBrowser.Designer.cs">
       <DependentUpon>JiraIssueBrowser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Jira\JiraLogin.cs" />
+    <Compile Include="Forms\Jira\JiraLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Jira\JiraLogin.Designer.cs">
       <DependentUpon>JiraLogin.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Deprecated\JiraTicketViewer.cs" />
+    <Compile Include="Forms\Deprecated\JiraTicketViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Deprecated\JiraTicketViewer.Designer.cs">
       <DependentUpon>JiraTicketViewer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Data\Notes\LoadNote.cs" />
+    <Compile Include="Forms\Data\Notes\LoadNote.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Data\Notes\LoadNote.Designer.cs">
       <DependentUpon>LoadNote.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Data\LogBrowser.cs" />
+    <Compile Include="Forms\Data\LogBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Data\LogBrowser.Designer.cs">
       <DependentUpon>LogBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\TaskTracker.cs" />
-    <Compile Include="Forms\Jira\JiraNames.cs" />
+    <Compile Include="Forms\Jira\JiraNames.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Jira\JiraNames.Designer.cs">
       <DependentUpon>JiraNames.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Main.cs" />
-    <Compile Include="Forms\Main.Designer.cs">
+    <Compile Include="Forms\Deprecated\Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Deprecated\Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\Notifications\FormAnimator.cs" />
     <Compile Include="Classes\Notifications\NativeMethods.cs" />
-    <Compile Include="Forms\Basic Forms\ManualTime.cs" />
+    <Compile Include="Forms\Basic Forms\ManualTime.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Basic Forms\ManualTime.Designer.cs">
       <DependentUpon>ManualTime.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Jira\MessageBuilder.cs" />
+    <Compile Include="Forms\Jira\MessageBuilder.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Jira\MessageBuilder.Designer.cs">
       <DependentUpon>MessageBuilder.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Data\Notes\Notes.cs" />
+    <Compile Include="Forms\Data\Notes\Notes.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Data\Notes\Notes.Designer.cs">
       <DependentUpon>Notes.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Jira\Notification.cs" />
+    <Compile Include="Forms\Jira\Notification.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Jira\Notification.Designer.cs">
       <DependentUpon>Notification.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Data\Notes\SaveAs.cs" />
+    <Compile Include="Forms\Data\Notes\SaveAs.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Data\Notes\SaveAs.Designer.cs">
       <DependentUpon>SaveAs.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Data\SendMessage.cs" />
+    <Compile Include="Forms\Data\SendMessage.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Data\SendMessage.Designer.cs">
       <DependentUpon>SendMessage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Basic Forms\Suggestion.cs" />
+    <Compile Include="Forms\Basic Forms\Suggestion.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Basic Forms\Suggestion.Designer.cs">
       <DependentUpon>Suggestion.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Data\TaskFilter.cs" />
+    <Compile Include="Forms\Data\TaskFilter.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Data\TaskFilter.Designer.cs">
       <DependentUpon>TaskFilter.cs</DependentUpon>
     </Compile>
@@ -327,7 +407,9 @@
     <Compile Include="Forms\NewSettings.Designer.cs">
       <DependentUpon>NewSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OnePointSevenConverter.cs" />
+    <Compile Include="Forms\OnePointSevenConverter.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\OnePointSevenConverter.Designer.cs">
       <DependentUpon>OnePointSevenConverter.cs</DependentUpon>
     </Compile>
@@ -339,15 +421,23 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Forms\Deprecated\Settings.cs" />
+    <Compile Include="Forms\Deprecated\Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Deprecated\Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Deprecated\TestIssueTimeTracker.cs" />
+    <Compile Include="Forms\Deprecated\TestIssueTimeTracker.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Deprecated\TestIssueTimeTracker.Designer.cs">
       <DependentUpon>TestIssueTimeTracker.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\Data\Task.cs" />
+    <EmbeddedResource Include="Forms\Basic Forms\About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Basic Forms\ColorPicker\ColorDropper.resx">
       <DependentUpon>ColorDropper.cs</DependentUpon>
     </EmbeddedResource>
@@ -436,8 +526,9 @@
       <DependentUpon>JiraNames.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Main.resx">
+    <EmbeddedResource Include="Forms\Deprecated\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Basic Forms\ManualTime.resx">
       <DependentUpon>ManualTime.cs</DependentUpon>
@@ -477,6 +568,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ThemedMain.resx">
       <DependentUpon>ThemedMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

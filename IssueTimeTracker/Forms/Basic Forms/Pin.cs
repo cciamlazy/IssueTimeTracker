@@ -50,8 +50,8 @@ namespace IssueTimeTracker.Forms.Basic_Forms
                             }
                             if (StaticHandler._ThemedMain != null)
                             {
-                                StaticHandler._ThemedMain.JiraPassword = GetPassword(textBox1.Text);
-                                _jiraLogin.PassPin(StaticHandler._ThemedMain.JiraPassword);
+                                JiraChecker.JiraPassword = GetPassword(textBox1.Text);
+                                _jiraLogin.PassPin(JiraChecker.JiraPassword);
                             }
                         }
                         catch

@@ -67,6 +67,12 @@
             this.Jira_Link = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.Notifications = new System.Windows.Forms.TabPage();
+            this.button12 = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.Notification_Carrier = new System.Windows.Forms.ComboBox();
+            this.Notification_PhoneNumber = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.Notification_TextNotification = new System.Windows.Forms.CheckBox();
             this.Jira_WindowsNotification = new System.Windows.Forms.ComboBox();
             this.label25 = new System.Windows.Forms.Label();
             this.Notification_Scale = new System.Windows.Forms.NumericUpDown();
@@ -99,12 +105,8 @@
             this.Title = new System.Windows.Forms.Label();
             this.IconI = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.Notification_TextNotification = new System.Windows.Forms.CheckBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.Notification_Carrier = new System.Windows.Forms.ComboBox();
-            this.Notification_PhoneNumber = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.button12 = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.jiraSLAGrid = new System.Windows.Forms.DataGridView();
             this.settingPages.SuspendLayout();
             this.General.SuspendLayout();
             this.Timer.SuspendLayout();
@@ -118,6 +120,8 @@
             this.DataLogging.SuspendLayout();
             this.TitleBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.IconI)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.jiraSLAGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // settingPages
@@ -483,6 +487,7 @@
             // 
             // Jira
             // 
+            this.Jira.Controls.Add(this.groupBox1);
             this.Jira.Controls.Add(this.Jira_Mode);
             this.Jira.Controls.Add(this.label21);
             this.Jira.Controls.Add(this.button9);
@@ -646,6 +651,78 @@
             this.Notifications.TabIndex = 2;
             this.Notifications.Text = "Notifications";
             this.Notifications.UseVisualStyleBackColor = true;
+            // 
+            // button12
+            // 
+            this.button12.FlatAppearance.BorderSize = 0;
+            this.button12.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Silver;
+            this.button12.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button12.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button12.Location = new System.Drawing.Point(216, 230);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(50, 19);
+            this.button12.TabIndex = 169;
+            this.button12.Text = "Test";
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(4, 259);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(51, 17);
+            this.label6.TabIndex = 168;
+            this.label6.Text = "Carrier:";
+            // 
+            // Notification_Carrier
+            // 
+            this.Notification_Carrier.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Notification_Carrier.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.Notification_Carrier.FormattingEnabled = true;
+            this.Notification_Carrier.Location = new System.Drawing.Point(109, 256);
+            this.Notification_Carrier.Name = "Notification_Carrier";
+            this.Notification_Carrier.Size = new System.Drawing.Size(157, 25);
+            this.Notification_Carrier.TabIndex = 167;
+            this.Notification_Carrier.SelectedIndexChanged += new System.EventHandler(this.Notification_Carrier_SelectedIndexChanged);
+            // 
+            // Notification_PhoneNumber
+            // 
+            this.Notification_PhoneNumber.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.Notification_PhoneNumber.Font = new System.Drawing.Font("Segoe UI", 10.5F);
+            this.Notification_PhoneNumber.Location = new System.Drawing.Point(109, 230);
+            this.Notification_PhoneNumber.MaxLength = 10;
+            this.Notification_PhoneNumber.Name = "Notification_PhoneNumber";
+            this.Notification_PhoneNumber.Size = new System.Drawing.Size(101, 19);
+            this.Notification_PhoneNumber.TabIndex = 166;
+            this.Notification_PhoneNumber.Text = "8888888888";
+            this.Notification_PhoneNumber.TextChanged += new System.EventHandler(this.Notification_PhoneNumber_TextChanged);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.Location = new System.Drawing.Point(4, 231);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(99, 17);
+            this.label17.TabIndex = 165;
+            this.label17.Text = "Phone Number:";
+            // 
+            // Notification_TextNotification
+            // 
+            this.Notification_TextNotification.AutoSize = true;
+            this.Notification_TextNotification.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Notification_TextNotification.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.Notification_TextNotification.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.Notification_TextNotification.Location = new System.Drawing.Point(7, 201);
+            this.Notification_TextNotification.Name = "Notification_TextNotification";
+            this.Notification_TextNotification.Size = new System.Drawing.Size(259, 24);
+            this.Notification_TextNotification.TabIndex = 164;
+            this.Notification_TextNotification.Text = "Send Text While Computer is Locked:";
+            this.Notification_TextNotification.UseVisualStyleBackColor = true;
+            this.Notification_TextNotification.CheckedChanged += new System.EventHandler(this.Notification_TextNotification_CheckedChanged);
             // 
             // Jira_WindowsNotification
             // 
@@ -1055,77 +1132,26 @@
             this.panel1.Size = new System.Drawing.Size(127, 75);
             this.panel1.TabIndex = 133;
             // 
-            // Notification_TextNotification
+            // groupBox1
             // 
-            this.Notification_TextNotification.AutoSize = true;
-            this.Notification_TextNotification.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Notification_TextNotification.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.Notification_TextNotification.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.Notification_TextNotification.Location = new System.Drawing.Point(7, 201);
-            this.Notification_TextNotification.Name = "Notification_TextNotification";
-            this.Notification_TextNotification.Size = new System.Drawing.Size(259, 24);
-            this.Notification_TextNotification.TabIndex = 164;
-            this.Notification_TextNotification.Text = "Send Text While Computer is Locked:";
-            this.Notification_TextNotification.UseVisualStyleBackColor = true;
-            this.Notification_TextNotification.CheckedChanged += new System.EventHandler(this.Notification_TextNotification_CheckedChanged);
+            this.groupBox1.Controls.Add(this.jiraSLAGrid);
+            this.groupBox1.Location = new System.Drawing.Point(9, 124);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(269, 123);
+            this.groupBox1.TabIndex = 144;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Jira SLAs";
             // 
-            // label6
+            // jiraSLAGrid
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(4, 259);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(51, 17);
-            this.label6.TabIndex = 168;
-            this.label6.Text = "Carrier:";
-            // 
-            // Notification_Carrier
-            // 
-            this.Notification_Carrier.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Notification_Carrier.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.Notification_Carrier.FormattingEnabled = true;
-            this.Notification_Carrier.Location = new System.Drawing.Point(109, 256);
-            this.Notification_Carrier.Name = "Notification_Carrier";
-            this.Notification_Carrier.Size = new System.Drawing.Size(157, 25);
-            this.Notification_Carrier.TabIndex = 167;
-            this.Notification_Carrier.SelectedIndexChanged += new System.EventHandler(this.Notification_Carrier_SelectedIndexChanged);
-            // 
-            // Notification_PhoneNumber
-            // 
-            this.Notification_PhoneNumber.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.Notification_PhoneNumber.Font = new System.Drawing.Font("Segoe UI", 10.5F);
-            this.Notification_PhoneNumber.Location = new System.Drawing.Point(109, 230);
-            this.Notification_PhoneNumber.MaxLength = 10;
-            this.Notification_PhoneNumber.Name = "Notification_PhoneNumber";
-            this.Notification_PhoneNumber.Size = new System.Drawing.Size(101, 19);
-            this.Notification_PhoneNumber.TabIndex = 166;
-            this.Notification_PhoneNumber.Text = "8888888888";
-            this.Notification_PhoneNumber.TextChanged += new System.EventHandler(this.Notification_PhoneNumber_TextChanged);
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(4, 231);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(99, 17);
-            this.label17.TabIndex = 165;
-            this.label17.Text = "Phone Number:";
-            // 
-            // button12
-            // 
-            this.button12.FlatAppearance.BorderSize = 0;
-            this.button12.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Silver;
-            this.button12.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button12.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button12.Location = new System.Drawing.Point(216, 230);
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(50, 19);
-            this.button12.TabIndex = 169;
-            this.button12.Text = "Test";
-            this.button12.UseVisualStyleBackColor = true;
-            this.button12.Click += new System.EventHandler(this.button12_Click);
+            this.jiraSLAGrid.BackgroundColor = System.Drawing.Color.White;
+            this.jiraSLAGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.jiraSLAGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.jiraSLAGrid.GridColor = System.Drawing.Color.White;
+            this.jiraSLAGrid.Location = new System.Drawing.Point(6, 22);
+            this.jiraSLAGrid.Name = "jiraSLAGrid";
+            this.jiraSLAGrid.Size = new System.Drawing.Size(257, 95);
+            this.jiraSLAGrid.TabIndex = 1;
             // 
             // NewSettings
             // 
@@ -1167,6 +1193,8 @@
             this.TitleBar.ResumeLayout(false);
             this.TitleBar.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.IconI)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.jiraSLAGrid)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1248,5 +1276,7 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.CheckBox Notification_TextNotification;
         private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.DataGridView jiraSLAGrid;
     }
 }

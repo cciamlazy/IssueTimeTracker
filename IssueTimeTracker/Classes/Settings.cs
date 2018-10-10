@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IssueTimeTracker.Classes.Data;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -87,7 +88,7 @@ namespace IssueTimeTracker.Classes
         public List<string> Jira_Responses { get; set; } = new List<string>();
         public bool Jira_SavePassword { get; set; } = false;
         public string Jira_EncryptedPassword { get; set; } = "";
-        public bool Jira_ShowTrayIcon { get; set; } = true;
+        public List<SLA> Jira_SLAs { get; set; } = new List<SLA>();
 
         //Notes
         public List<string> Notes_OpenTabs = new List<string>();
