@@ -124,6 +124,7 @@ namespace IssueTimeTracker.Forms
             Notification_Frequency.Value = Setting.Value.Notification_Frequency;
             Notification_Scale.Value = Setting.Value.Notification_Scale;
             Notification_TextNotification.Checked = Setting.Value.Notification_TextNotification;
+            Notification_TextWhenUnlocked.Checked = Setting.Value.Notification_TextWhenUnlocked;
             Notification_PhoneNumber.Text = Setting.Value.Notification_PhoneNumber;
 
             foreach (var v in NotificationHandler.Carriers)
@@ -797,6 +798,7 @@ namespace IssueTimeTracker.Forms
             Setting.Value.Notification_Sound = Notification_SoundComboBox.SelectedItem.ToString();
             Setting.Value.Notification_WindowsNotification = (Jira_WindowsNotification.SelectedIndex == 1);
             Setting.Value.Notification_TextNotification = Notification_TextNotification.Checked;
+            Setting.Value.Notification_TextWhenUnlocked = Notification_TextWhenUnlocked.Checked;
             Setting.Value.Notification_PhoneNumber = Notification_PhoneNumber.Text;
             if (Notification_Carrier.SelectedItem != null)
                 Setting.Value.Notification_Carrier = Notification_Carrier.SelectedItem.ToString();
@@ -1179,6 +1181,14 @@ namespace IssueTimeTracker.Forms
                 MessageBox.Show("Failed to process: " + ea.Message);
             }
             webClient.Dispose();
+        }
+
+        private void Notification_TextWhenUnlocked_CheckedChanged(object sender, EventArgs e)
+        {
+            if (FormLoaded)
+            {
+                SettingsHaveChanged = true;
+            }
         }
     }
 }

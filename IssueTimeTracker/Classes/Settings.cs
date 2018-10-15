@@ -51,6 +51,7 @@ namespace IssueTimeTracker.Classes
         public Color Notification_TextColor { get; set; } = Color.White;
         public bool Notification_WindowsNotification { get; set; } = false;
         public bool Notification_TextNotification { get; set; } = false;
+        public bool Notification_TextWhenUnlocked { get; set; } = false;
         public string Notification_PhoneNumber { get; set; } = "";
         public string Notification_Carrier { get; set; } = "";
 

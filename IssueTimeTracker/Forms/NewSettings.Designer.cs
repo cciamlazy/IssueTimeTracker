@@ -56,6 +56,8 @@
             this.Timer_MaxRecentIssues = new System.Windows.Forms.NumericUpDown();
             this.label22 = new System.Windows.Forms.Label();
             this.Jira = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.jiraSLAGrid = new System.Windows.Forms.DataGridView();
             this.Jira_Mode = new System.Windows.Forms.ComboBox();
             this.label21 = new System.Windows.Forms.Label();
             this.button9 = new System.Windows.Forms.Button();
@@ -105,8 +107,9 @@
             this.Title = new System.Windows.Forms.Label();
             this.IconI = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.jiraSLAGrid = new System.Windows.Forms.DataGridView();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.Notification_TextWhenUnlocked = new System.Windows.Forms.CheckBox();
             this.settingPages.SuspendLayout();
             this.General.SuspendLayout();
             this.Timer.SuspendLayout();
@@ -114,14 +117,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.Timer_RoundUpMinutes)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Timer_MaxRecentIssues)).BeginInit();
             this.Jira.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.jiraSLAGrid)).BeginInit();
             this.Notifications.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Notification_Scale)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Notification_Frequency)).BeginInit();
             this.DataLogging.SuspendLayout();
             this.TitleBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.IconI)).BeginInit();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.jiraSLAGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // settingPages
@@ -506,6 +509,27 @@
             this.Jira.Text = "Jira";
             this.Jira.UseVisualStyleBackColor = true;
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.jiraSLAGrid);
+            this.groupBox1.Location = new System.Drawing.Point(9, 124);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(269, 123);
+            this.groupBox1.TabIndex = 144;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Jira SLAs";
+            // 
+            // jiraSLAGrid
+            // 
+            this.jiraSLAGrid.BackgroundColor = System.Drawing.Color.White;
+            this.jiraSLAGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.jiraSLAGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.jiraSLAGrid.GridColor = System.Drawing.Color.White;
+            this.jiraSLAGrid.Location = new System.Drawing.Point(6, 22);
+            this.jiraSLAGrid.Name = "jiraSLAGrid";
+            this.jiraSLAGrid.Size = new System.Drawing.Size(257, 95);
+            this.jiraSLAGrid.TabIndex = 1;
+            // 
             // Jira_Mode
             // 
             this.Jira_Mode.FormattingEnabled = true;
@@ -622,6 +646,9 @@
             // 
             // Notifications
             // 
+            this.Notifications.Controls.Add(this.label23);
+            this.Notifications.Controls.Add(this.Notification_TextWhenUnlocked);
+            this.Notifications.Controls.Add(this.label18);
             this.Notifications.Controls.Add(this.button12);
             this.Notifications.Controls.Add(this.label6);
             this.Notifications.Controls.Add(this.Notification_Carrier);
@@ -716,11 +743,11 @@
             this.Notification_TextNotification.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.Notification_TextNotification.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.Notification_TextNotification.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.Notification_TextNotification.Location = new System.Drawing.Point(7, 201);
+            this.Notification_TextNotification.Location = new System.Drawing.Point(50, 202);
             this.Notification_TextNotification.Name = "Notification_TextNotification";
-            this.Notification_TextNotification.Size = new System.Drawing.Size(259, 24);
+            this.Notification_TextNotification.Size = new System.Drawing.Size(38, 24);
             this.Notification_TextNotification.TabIndex = 164;
-            this.Notification_TextNotification.Text = "Send Text While Computer is Locked:";
+            this.Notification_TextNotification.Text = " ";
             this.Notification_TextNotification.UseVisualStyleBackColor = true;
             this.Notification_TextNotification.CheckedChanged += new System.EventHandler(this.Notification_TextNotification_CheckedChanged);
             // 
@@ -1132,26 +1159,39 @@
             this.panel1.Size = new System.Drawing.Size(127, 75);
             this.panel1.TabIndex = 133;
             // 
-            // groupBox1
+            // label18
             // 
-            this.groupBox1.Controls.Add(this.jiraSLAGrid);
-            this.groupBox1.Location = new System.Drawing.Point(9, 124);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(269, 123);
-            this.groupBox1.TabIndex = 144;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Jira SLAs";
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.label18.Location = new System.Drawing.Point(3, 203);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(70, 19);
+            this.label18.TabIndex = 170;
+            this.label18.Text = "Send Text:";
             // 
-            // jiraSLAGrid
+            // label23
             // 
-            this.jiraSLAGrid.BackgroundColor = System.Drawing.Color.White;
-            this.jiraSLAGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.jiraSLAGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.jiraSLAGrid.GridColor = System.Drawing.Color.White;
-            this.jiraSLAGrid.Location = new System.Drawing.Point(6, 22);
-            this.jiraSLAGrid.Name = "jiraSLAGrid";
-            this.jiraSLAGrid.Size = new System.Drawing.Size(257, 95);
-            this.jiraSLAGrid.TabIndex = 1;
+            this.label23.AutoSize = true;
+            this.label23.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.label23.Location = new System.Drawing.Point(95, 203);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(107, 19);
+            this.label23.TabIndex = 171;
+            this.label23.Text = "While Unlocked:";
+            // 
+            // Notification_TextWhenUnlocked
+            // 
+            this.Notification_TextWhenUnlocked.AutoSize = true;
+            this.Notification_TextWhenUnlocked.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Notification_TextWhenUnlocked.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.Notification_TextWhenUnlocked.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.Notification_TextWhenUnlocked.Location = new System.Drawing.Point(178, 203);
+            this.Notification_TextWhenUnlocked.Name = "Notification_TextWhenUnlocked";
+            this.Notification_TextWhenUnlocked.Size = new System.Drawing.Size(38, 24);
+            this.Notification_TextWhenUnlocked.TabIndex = 172;
+            this.Notification_TextWhenUnlocked.Text = " ";
+            this.Notification_TextWhenUnlocked.UseVisualStyleBackColor = true;
+            this.Notification_TextWhenUnlocked.CheckedChanged += new System.EventHandler(this.Notification_TextWhenUnlocked_CheckedChanged);
             // 
             // NewSettings
             // 
@@ -1184,6 +1224,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.Timer_MaxRecentIssues)).EndInit();
             this.Jira.ResumeLayout(false);
             this.Jira.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.jiraSLAGrid)).EndInit();
             this.Notifications.ResumeLayout(false);
             this.Notifications.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Notification_Scale)).EndInit();
@@ -1193,8 +1235,6 @@
             this.TitleBar.ResumeLayout(false);
             this.TitleBar.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.IconI)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.jiraSLAGrid)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1278,5 +1318,8 @@
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView jiraSLAGrid;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.CheckBox Notification_TextWhenUnlocked;
+        private System.Windows.Forms.Label label18;
     }
 }

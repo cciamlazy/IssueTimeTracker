@@ -181,6 +181,7 @@
     <Compile Include="Classes\Messenger\Message.cs" />
     <Compile Include="Classes\Messenger\MessageData.cs" />
     <Compile Include="Classes\Helper\Serializer.cs" />
+    <Compile Include="Classes\Notifications\TicketNameAssist.cs" />
     <Compile Include="Classes\Setting.cs" />
     <Compile Include="Classes\Settings.cs" />
     <Compile Include="Classes\Updater\DownloadFile.cs" />

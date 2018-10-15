@@ -21,6 +21,7 @@ using System.Security;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using ToastNotifications;
+using WinFormAnimation;
 
 namespace IssueTimeTracker
 {
@@ -31,6 +32,7 @@ namespace IssueTimeTracker
             this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
             InitializeComponent();
             DoubleBuffered = true;
+            //this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
             CurrentTheme = Setting.Value.CurrentTheme;
 
@@ -619,7 +621,7 @@ namespace IssueTimeTracker
             if (TaskTracker.isCurrentTaskNull)
                 TaskTracker.StartNewTask();
 
-            if (UseComboBox.Items.Count <= 0)
+            if (UseComboBox.Items.Count <= 0 && UseComboBox.Text != "")
                 return;
             LeftoverTransfer = 0.0f;
 
@@ -736,6 +738,7 @@ namespace IssueTimeTracker
 
         public async void TestNotif()
         {
+            //NotificationHandler.ToastNotification("Test", "This is a test", false, 5, "LAC-319");
             /*try
             {
                 IEnumerable<Issue> jiraIssues = await JiraChecker._Jira.Issues.GetIssuesFromJqlAsync("Project=LAC");
@@ -787,19 +790,19 @@ namespace IssueTimeTracker
                 return;
             }
             string version = Program.getLatestVersion(wc);
-            if ((File.Exists(Path.Combine(Program.DataPath, "CurrentVersion.json")) &&
-                Program.isNewer(Program.GetUpdateFile(Path.Combine(Program.DataPath, "CurrentVersion.json")).Version, version)) ||
+            if ((File.Exists(System.IO.Path.Combine(Program.DataPath, "CurrentVersion.json")) &&
+                Program.isNewer(Program.GetUpdateFile(System.IO.Path.Combine(Program.DataPath, "CurrentVersion.json")).Version, version)) ||
                 Program.isNewer(FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion, Program.getLatestVersion(wc)))
             {
                 if (MessageBox.Show("An update is available, would you like to update now?\n\nNote: As of 1.6, your total time will load if the application is restarted. Just make sure to enter the last task because that will be lost.", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                 {
-                    if (File.Exists(Path.Combine(Program.DataPath, "NewVersion.xml")))
+                    if (File.Exists(System.IO.Path.Combine(Program.DataPath, "NewVersion.xml")))
                     {
-                        File.Delete(Path.Combine(Program.DataPath, "NewVersion.xml"));
+                        File.Delete(System.IO.Path.Combine(Program.DataPath, "NewVersion.xml"));
                     }
-                    if (File.Exists(Path.Combine(Program.DataPath, "NewVersion.json")))
+                    if (File.Exists(System.IO.Path.Combine(Program.DataPath, "NewVersion.json")))
                     {
-                        File.Delete(Path.Combine(Program.DataPath, "NewVersion.json"));
+                        File.Delete(System.IO.Path.Combine(Program.DataPath, "NewVersion.json"));
                     }
                     string updater = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\IssueTimeTracker\\IssueTimeTrackerUpdater.exe";
                     if (File.Exists(updater))
@@ -1048,26 +1051,38 @@ namespace IssueTimeTracker
         {
             new JiraData().Show();
         }
-
-        List<Panel> animatedStars = new List<Panel>();
+        
+        List<Animator2D> animatedFlakes = new List<Animator2D>();
+        int flakeSpeed = 10; //The higher, the slower
 
         private void applyThemeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Random r = new Random();
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 10; i++)
             {
                 int size = r.Next(1, 5);
-                
-                Panel star = new Panel()
+
+                Panel flake = new Panel()
                 {
                     BackColor = Color.White,
-                    Location = new Point(r.Next(this.Width), r.Next(this.Height)),
+                    Location = new Point(r.Next(this.Width), -r.Next(this.Height)),
                     Size = new Size(size, size),
                     Visible = true,
                     Tag = "PreventTheme"
                 };
-                this.Controls.Add(star);
-                animatedStars.Add(star);
+                this.Controls.Add(flake);
+                flake.BringToFront();
+
+                Animator2D _animator = new Animator2D(
+                    new Path2D(new Float2D(flake.Location.X, -r.Next((int)(this.Height * 1.5))), 
+                    new Float2D(flake.Location.X, this.Size.Height + r.Next(this.Height/2)), 
+                    (ulong)(1000 * (flakeSpeed - size) * (r.NextDouble() * 10)))
+                        /*.ContinueTo(new Float2D(200, 200), 1000)*/)
+                {
+                    Repeat = true
+                };
+                _animator.Play(flake, Animator2D.KnownProperties.Location);
+                animatedFlakes.Add(_animator);
             }
             //Animator.Enabled = true;
         }
@@ -1315,18 +1330,6 @@ namespace IssueTimeTracker
         {
             if (Setting.Value.General_JiraAccess && Setting.Value.Jira_AutoCheck)
                 jiraLogin.AutoLogin(sender, e);
-        }
-
-        private void Animator_Tick(object sender, EventArgs e)
-        {
-            Random r = new Random();
-            foreach (Panel p in animatedStars)
-            {
-                if (p.Location.X > this.Size.Width)
-                    p.Location = new Point(-p.Width, r.Next(5, this.Height - 5));
-                p.Location = new Point(p.Location.X + (p.Size.Width / 2), p.Location.Y);
-                p.BringToFront();
-            }
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)

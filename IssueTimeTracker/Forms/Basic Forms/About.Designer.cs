@@ -121,7 +121,9 @@
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(260, 190);
             this.textBox1.TabIndex = 147;
-            this.textBox1.Text = resources.GetString("textBox1.Text");
+            this.textBox1.Text = "This is a tool created by Chris Smith for the EccoviaSolutions technical support " +
+    "team to help track and manage time spent on tickets and to track Jira for new LA" +
+    "C tickets to meet current SLAs.";
             // 
             // linkLabel1
             // 

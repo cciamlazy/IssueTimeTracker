@@ -1,4 +1,5 @@
-﻿using IssueTimeTracker.Forms;
+﻿using IssueTimeTracker.Classes.Notifications;
+using IssueTimeTracker.Forms;
 using IssueTimeTracker.Properties;
 using Microsoft.Win32;
 using System;
@@ -60,6 +61,7 @@ namespace IssueTimeTracker.Classes.Helper
                 new MenuItem("Pause Checking Jira", StopCheckingJira),
                 new MenuItem("Minimize to system tray", MinimizeToSystemTray),
                 new MenuItem("Restore", RestoreFromSystemTray),
+                new MenuItem("Check for Updates", CheckForUpdates)
             });
 
             trayMenuItems.Add("QuickEnter", trayMenuItems.Count);
@@ -68,7 +70,8 @@ namespace IssueTimeTracker.Classes.Helper
             trayMenuItems.Add("Pause", trayMenuItems.Count);
             trayMenuItems.Add("Minimize", trayMenuItems.Count);
             trayMenuItems.Add("Restore", trayMenuItems.Count);
-            
+            trayMenuItems.Add("Update", trayMenuItems.Count);
+
             UpdateTrayItem("Resume", false);
             UpdateTrayItem("Restore", false);
 
@@ -96,17 +99,19 @@ namespace IssueTimeTracker.Classes.Helper
 
         private static List<string> IssuesTexted = new List<string>();
 
+        private static List<TicketNameAssist> balloonTickets = new List<TicketNameAssist>();
+
         public static void ToastNotification(string header, string body, bool sound = true, int duration = -1, string issue = "")
         {
-            if (Setting.Value.Notification_TextNotification && ComputerLocked && issue != "" && !IssuesTexted.Contains(issue))
+            if (Setting.Value.Notification_TextNotification && (ComputerLocked || Setting.Value.Notification_TextWhenUnlocked) && issue != "" && !IssuesTexted.Contains(issue))
             {
                 WebClient webClient = new WebClient();
                 try
                 {
-                    string project = TempIssue.Split('-')[0];
+                    string project = issue.Split('-')[0];
                     IssuesTexted.Add(issue);
                     webClient.DownloadString(MainData.Instance.Domain + string.Format("IssueTimeTracker/PostText.php?email={0}&subject={1}&msg={2}",
-                        (Setting.Value.Notification_PhoneNumber + Carriers[Setting.Value.Notification_Carrier]), header, body + "\r\n" + Setting.Value.Jira_Link + @"projects/" + project + "/issues/" + TempIssue));
+                        (Setting.Value.Notification_PhoneNumber + Carriers[Setting.Value.Notification_Carrier]), header, body + "\r\n" + Setting.Value.Jira_Link + @"projects/" + project + "/issues/" + issue));
                 }
                 catch (Exception ea)
                 {
@@ -121,13 +126,19 @@ namespace IssueTimeTracker.Classes.Helper
                 {
                     Initialize();
                 }
-                TempIssue = issue;
+                balloonTickets.Add(new TicketNameAssist() { Issue = issue, Text = body });
                 trayIcon.BalloonTipTitle = header;
                 trayIcon.BalloonTipText = body;
                 trayIcon.BalloonTipClicked += new EventHandler(BalloonTipClick);
                 if (duration == -1)
+                    duration = 30;
+                else if (duration <= 5)
+                    duration = 5;
+                duration *= 1000;
+                if (duration > 30000)
                     duration = 30000;
                 trayIcon.Visible = true;
+                trayIcon.Tag = issue;
                 trayIcon.ShowBalloonTip(duration);
             }
             else
@@ -153,26 +164,28 @@ namespace IssueTimeTracker.Classes.Helper
             catch { }
         }
 
-        public static string TempIssue = "";
-
         public async static void BalloonTipClick(object sender, EventArgs e)
         {
-            if (TempIssue != null && TempIssue != "" && Setting.Value.Jira_Mode != Classes.JiraMode.Nothing)
+            NotifyIcon n = (NotifyIcon)sender;
+            string issue = "";
+            foreach (TicketNameAssist t in balloonTickets)
+                if (t.Text == n.BalloonTipText)
+                    issue = t.Issue;
+            if (issue != null && issue != "" && Setting.Value.Jira_Mode != Classes.JiraMode.Nothing)
             {
                 if (Setting.Value.Jira_Mode == Classes.JiraMode.InApplication)
                 {
                     StaticHandler._ThemedMain.jiraTicket = new JiraIssueBrowser();
                     StaticHandler._ThemedMain.jiraTicket.Show();
-                    await StaticHandler._ThemedMain.jiraTicket.NavigateToIssueByKey(TempIssue);
+                    await StaticHandler._ThemedMain.jiraTicket.NavigateToIssueByKey(issue);
                     StaticHandler._ThemedMain.jiraTicket.AddPremadeResponse();
                 }
                 else if (Setting.Value.Jira_Mode == Classes.JiraMode.WebBrowser)
                 {
-                    string project = TempIssue.Split('-')[0];
-                    Process.Start(Setting.Value.Jira_Link + @"projects/" + project + "/issues/" + TempIssue);
+                    string project = issue.Split('-')[0];
+                    Process.Start(Setting.Value.Jira_Link + @"projects/" + project + "/issues/" + issue);
                 }
             }
-            TempIssue = "";
         }
 
         public static void UpdateSystemTrayIcon(bool isCheckingJira)
@@ -241,6 +254,39 @@ namespace IssueTimeTracker.Classes.Helper
                 StaticHandler._ThemedMain.Location = new Point(Screen.PrimaryScreen.WorkingArea.X + 400, Screen.PrimaryScreen.WorkingArea.Y + 100);
             UpdateTrayItem("Minimize", true);
             UpdateTrayItem("Restore", false);
+        }
+
+        public static void CheckForUpdates(object Sender, EventArgs e)
+        {
+            WebClient wc = new WebClient();
+            if (!Program.CheckForInternetConnection())
+            {
+                MessageBox.Show("You have no internet connection");
+                return;
+            }
+            string version = Program.getLatestVersion(wc);
+            if ((File.Exists(Path.Combine(Program.DataPath, "CurrentVersion.json")) &&
+                Program.isNewer(Program.GetUpdateFile(Path.Combine(Program.DataPath, "CurrentVersion.json")).Version, version)) ||
+                Program.isNewer(FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion, Program.getLatestVersion(wc)))
+            {
+                if (MessageBox.Show("An update is available, would you like to update now?", "Question", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Stop) == DialogResult.Yes)
+                {
+                    if (File.Exists(Path.Combine(Program.DataPath, "NewVersion.json")))
+                    {
+                        File.Delete(Path.Combine(Program.DataPath, "NewVersion.json"));
+                    }
+                    string updater = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\IssueTimeTracker\\IssueTimeTrackerUpdater.exe";
+                    if (File.Exists(updater))
+                        File.Delete(updater);
+                    wc.DownloadFile(MainData.Instance.Domain + "IssueTimeTracker/IssueTimeTrackerUpdater.exe", updater);
+                    if (File.Exists(updater))
+                        Process.Start(updater);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Issue Time Tracker is up-to-date!");
+            }
         }
 
         public static void StopCheckingJira(object Sender, EventArgs e)
